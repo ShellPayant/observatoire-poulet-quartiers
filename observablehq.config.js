@@ -3,6 +3,8 @@
 
 export default {
   title: "Observatoire Poulet & Quartiers",
+  // Root locally; set PAGES_BASE in CI for a GitHub project-pages sub-path.
+  base: process.env.PAGES_BASE || "/",
   // A neutral, source-cited civic observatory. The sidebar leads with the FR site.
   pages: [
     {
