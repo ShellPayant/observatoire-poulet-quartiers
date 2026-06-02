@@ -1,0 +1,295 @@
+{
+  "generated": "2026-06-02",
+  "scope_fr": "Grand Paris — Paris (75), Hauts-de-Seine (92), Seine-Saint-Denis (93), Val-de-Marne (94)",
+  "kpis": [
+    {
+      "id": "prix_so",
+      "label_fr": "Prix médian à Saint-Ouen (2024)",
+      "label_en": "Median price in Saint-Ouen (2024)",
+      "value": 6399,
+      "unit": "€/m²",
+      "level": "documenté",
+      "source": "dvf"
+    },
+    {
+      "id": "prix_so_evol",
+      "label_fr": "Évolution du prix à Saint-Ouen (2021→2024)",
+      "label_en": "Price change in Saint-Ouen (2021→2024)",
+      "value": -9,
+      "unit": "%",
+      "level": "documenté",
+      "source": "dvf"
+    },
+    {
+      "id": "fastfood_total",
+      "label_fr": "Points de restauration rapide recensés (Grand Paris, OSM)",
+      "label_en": "Fast-food points mapped (Grand Paris, OSM)",
+      "value": 4999,
+      "unit": "",
+      "level": "documenté",
+      "source": "osm",
+      "caveat_fr": "comptage OpenStreetMap, non exhaustif"
+    },
+    {
+      "id": "cibles_total",
+      "label_fr": "Enseignes-cibles poulet/crousti localisées",
+      "label_en": "Target chicken/crousti outlets located",
+      "value": 64,
+      "unit": "",
+      "level": "émergent",
+      "source": "osm",
+      "caveat_fr": "couverture partielle (OSM + référence)"
+    },
+    {
+      "id": "master_poulet",
+      "label_fr": "Restaurants Master Poulet localisés",
+      "label_en": "Master Poulet outlets located",
+      "value": 16,
+      "unit": "",
+      "level": "émergent",
+      "source": "osm",
+      "caveat_fr": "OSM + liste de référence"
+    },
+    {
+      "id": "crime_so",
+      "label_fr": "Délinquance enregistrée à Saint-Ouen (2024, toutes catégories)",
+      "label_en": "Recorded crime in Saint-Ouen (2024, all categories)",
+      "value": 110.3,
+      "unit": "/1000 hab",
+      "level": "documenté",
+      "source": "ssmsi",
+      "caveat_fr": "niveau communal — ne décrit pas un quartier (sophisme écologique)"
+    },
+    {
+      "id": "ifop_maire",
+      "label_fr": "Français approuvant l’action du maire (Ifop, mai 2026)",
+      "label_en": "French approving the mayor’s action (Ifop, May 2026)",
+      "value": 55,
+      "unit": "%",
+      "level": "documenté",
+      "source": "ifop_darwin"
+    }
+  ],
+  "saint_ouen": {
+    "code_commune": "93070",
+    "price_series": [
+      {
+        "code_commune": "93070",
+        "annee": 2021,
+        "n_ventes": 686,
+        "median_prix_m2": 7001
+      },
+      {
+        "code_commune": "93070",
+        "annee": 2022,
+        "n_ventes": 755,
+        "median_prix_m2": 7000
+      },
+      {
+        "code_commune": "93070",
+        "annee": 2023,
+        "n_ventes": 630,
+        "median_prix_m2": 6759
+      },
+      {
+        "code_commune": "93070",
+        "annee": 2024,
+        "n_ventes": 542,
+        "median_prix_m2": 6399
+      }
+    ],
+    "benchmarks": {
+      "75056": "Paris",
+      "93045": "Les Lilas",
+      "93070": "Saint-Ouen-sur-Seine"
+    },
+    "bench_departements": [
+      {
+        "code_departement": "75",
+        "annee": 2021,
+        "n_ventes": 34114,
+        "median_prix_m2": 10933
+      },
+      {
+        "code_departement": "75",
+        "annee": 2022,
+        "n_ventes": 36625,
+        "median_prix_m2": 10829
+      },
+      {
+        "code_departement": "75",
+        "annee": 2023,
+        "n_ventes": 29676,
+        "median_prix_m2": 10250
+      },
+      {
+        "code_departement": "75",
+        "annee": 2024,
+        "n_ventes": 27371,
+        "median_prix_m2": 9676
+      },
+      {
+        "code_departement": "92",
+        "annee": 2021,
+        "n_ventes": 23142,
+        "median_prix_m2": 7306
+      },
+      {
+        "code_departement": "92",
+        "annee": 2022,
+        "n_ventes": 23682,
+        "median_prix_m2": 7364
+      },
+      {
+        "code_departement": "92",
+        "annee": 2023,
+        "n_ventes": 17991,
+        "median_prix_m2": 7040
+      },
+      {
+        "code_departement": "92",
+        "annee": 2024,
+        "n_ventes": 16007,
+        "median_prix_m2": 6583
+      },
+      {
+        "code_departement": "93",
+        "annee": 2021,
+        "n_ventes": 18185,
+        "median_prix_m2": 4195
+      },
+      {
+        "code_departement": "93",
+        "annee": 2022,
+        "n_ventes": 17914,
+        "median_prix_m2": 4360
+      },
+      {
+        "code_departement": "93",
+        "annee": 2023,
+        "n_ventes": 14267,
+        "median_prix_m2": 4166
+      },
+      {
+        "code_departement": "93",
+        "annee": 2024,
+        "n_ventes": 13057,
+        "median_prix_m2": 4123
+      },
+      {
+        "code_departement": "94",
+        "annee": 2021,
+        "n_ventes": 19256,
+        "median_prix_m2": 5162
+      },
+      {
+        "code_departement": "94",
+        "annee": 2022,
+        "n_ventes": 18623,
+        "median_prix_m2": 5430
+      },
+      {
+        "code_departement": "94",
+        "annee": 2023,
+        "n_ventes": 14153,
+        "median_prix_m2": 5197
+      },
+      {
+        "code_departement": "94",
+        "annee": 2024,
+        "n_ventes": 13101,
+        "median_prix_m2": 5051
+      }
+    ],
+    "crime_series": [
+      {
+        "code_commune": "93070",
+        "annee": 2016,
+        "total_faits": 4562,
+        "pop": 49664,
+        "total_pour_mille": 91.9,
+        "n_indic_masques": 0
+      },
+      {
+        "code_commune": "93070",
+        "annee": 2017,
+        "total_faits": 4484,
+        "pop": 51108,
+        "total_pour_mille": 87.7,
+        "n_indic_masques": 0
+      },
+      {
+        "code_commune": "93070",
+        "annee": 2018,
+        "total_faits": 4324,
+        "pop": 50670,
+        "total_pour_mille": 85.3,
+        "n_indic_masques": 0
+      },
+      {
+        "code_commune": "93070",
+        "annee": 2019,
+        "total_faits": 4986,
+        "pop": 50697,
+        "total_pour_mille": 98.3,
+        "n_indic_masques": 0
+      },
+      {
+        "code_commune": "93070",
+        "annee": 2020,
+        "total_faits": 5013,
+        "pop": 51547,
+        "total_pour_mille": 97.3,
+        "n_indic_masques": 0
+      },
+      {
+        "code_commune": "93070",
+        "annee": 2021,
+        "total_faits": 6748,
+        "pop": 53207,
+        "total_pour_mille": 126.8,
+        "n_indic_masques": 0
+      },
+      {
+        "code_commune": "93070",
+        "annee": 2022,
+        "total_faits": 6524,
+        "pop": 53041,
+        "total_pour_mille": 123,
+        "n_indic_masques": 0
+      },
+      {
+        "code_commune": "93070",
+        "annee": 2023,
+        "total_faits": 6038,
+        "pop": 53615,
+        "total_pour_mille": 112.6,
+        "n_indic_masques": 0
+      },
+      {
+        "code_commune": "93070",
+        "annee": 2024,
+        "total_faits": 5912,
+        "pop": 53615,
+        "total_pour_mille": 110.3,
+        "n_indic_masques": 0
+      },
+      {
+        "code_commune": "93070",
+        "annee": 2025,
+        "total_faits": 5559,
+        "pop": 53615,
+        "total_pour_mille": 103.7,
+        "n_indic_masques": 0
+      }
+    ],
+    "crime_ref_year": 2024,
+    "fastfood": {
+      "code_commune": "93070",
+      "nom_commune": "Saint-Ouen-sur-Seine",
+      "dep": "93",
+      "n_fastfood": 60,
+      "n_cibles": 4
+    }
+  }
+}

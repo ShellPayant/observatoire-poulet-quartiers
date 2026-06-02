@@ -1,0 +1,33 @@
+{
+  "_comment": "Two-sided debate for the Saint-Ouen case study. Derived from the support dossier §11 (arguments) and §12 (objections), each item tagged with an evidence level. The site shows BOTH columns; it does not endorse either.",
+  "timeline": [
+    { "date": "24 mars 2026", "text": "Master Poulet dépose une demande d’enseigne auprès de la mairie ; selon le gérant, sans réponse.", "level": "contesté" },
+    { "date": "11 avril 2026", "text": "Ouverture rue Albert-Dhalenne, près du métro Mairie de Saint-Ouen. Le jour même, trois contrôles de police municipale.", "level": "documenté" },
+    { "date": "12 avril 2026", "text": "La mairie prononce la fermeture (« ouverture sans autorisation ») et fait poser des blocs de béton devant l’entrée.", "level": "documenté" },
+    { "date": "14 avril 2026", "text": "La Ville dépose plainte (terrasse sur l’espace public). Master Poulet saisit le tribunal administratif.", "level": "documenté" },
+    { "date": "18 avril 2026", "text": "Le tribunal administratif de Montreuil ordonne le retrait des obstacles : « atteinte grave et manifestement illégale à la liberté d’entreprendre ». L’enseigne retire sa terrasse.", "level": "documenté" },
+    { "date": "22 avril 2026", "text": "Les blocs sont remplacés par dix grandes jardinières devant la devanture. Nouvelle banderole.", "level": "documenté" },
+    { "date": "25 avril 2026", "text": "Le maire publie un long message sur X (> 1,3 M de vues) : « un combat juridique mais surtout politique ».", "level": "documenté" },
+    { "date": "mai 2026", "text": "Emballement national : LFI entre dans la bataille, plateaux TV, sondage Ifop, annonce d’un « arsenal juridique » anti-fast-food.", "level": "documenté" }
+  ],
+  "pro": [
+    { "title": "L’État de droit a tranché", "detail": "Murer un commerce légal avec des blocs de béton est une « atteinte grave et manifestement illégale à la liberté d’entreprendre » (principe constitutionnel). Le tribunal administratif de Montreuil l’a jugé sans ambiguïté.", "level": "documenté", "source": "dossier" },
+    { "title": "Une demande populaire réelle", "detail": "Files d’attente, prix accessibles en pleine inflation : pilon à 1 €, menu à 7 €. « Avec 7 euros, vous mangez pour deux. » Chasser l’enseigne reviendrait à imposer d’en haut les goûts d’une minorité.", "level": "documenté", "source": "dossier" },
+    { "title": "Emploi et insertion", "detail": "Le géographe Simon Vonthron (INRAE) décrit le snack comme un « amortisseur social » et une voie d’emploi pour des jeunes souvent exclus du marché du travail.", "level": "émergent", "source": "dossier" },
+    { "title": "Une qualité injustement salie", "detail": "« On fait du poulet rôti, pas frit. » Viande revendiquée européenne ; à Boulogne, des mesures d’odeurs commandées par la mairie se sont révélées conformes. « Malbouffe » est un terme subjectif, sans portée juridique.", "level": "contesté", "source": "dossier" },
+    { "title": "Les bons outils existaient", "detail": "Périmètre de sauvegarde du commerce, droit de préemption, PLU, encadrement des terrasses : des outils légaux existent pour réguler la diversité commerciale — mais ils se construisent en amont, pas en murant un commerce du jour au lendemain.", "level": "documenté", "source": "dossier" }
+  ],
+  "contra": [
+    { "title": "Une ouverture sans toutes les autorisations", "detail": "L’enseigne a ouvert sans réponse à sa demande et installé une terrasse sur le domaine public sans autorisation — qu’elle a retirée. La sanction devait toutefois rester proportionnée et légale.", "level": "documenté", "source": "dossier" },
+    { "title": "Des nuisances de voisinage", "detail": "Bruit, odeurs, livraisons tardives, attroupements sont invoqués par des riverains (ailleurs, un appartement « invendable car ça sent le poulet »). Ces nuisances se régulent — mais elles sont réelles.", "level": "émergent", "source": "dossier" },
+    { "title": "L’opinion soutient le maire", "detail": "Sondage Ifop (mai 2026) : 55 % des Français et 75 % des ouvriers approuvent l’action du maire. À reconnaître honnêtement — même si l’écart « dans ma rue » (67 %) vs « ailleurs » (47 %) trahit un réflexe NIMBY plus qu’un rejet du concept.", "level": "documenté", "source": "ifop_darwin" },
+    { "title": "Une traçabilité perfectible", "detail": "La traçabilité de la viande est jugée floue par certains. Mais 77 % du poulet de la restauration française était déjà importé en 2019 (Anvol) : c’est la norme du secteur, pas une faute propre à l’enseigne. La transparence reste un axe d’amélioration.", "level": "contesté", "source": "dossier" },
+    { "title": "Une saturation commerciale", "detail": "Plusieurs enseignes de poulet sont déjà présentes dans le secteur. La diversité commerciale est un objectif d’urbanisme légitime — qui se traite par des outils planifiés, pas par un passage en force.", "level": "émergent", "source": "dossier" }
+  ],
+  "poll": [
+    { "label_fr": "Approuvent l’action du maire", "label_en": "Approve the mayor’s action", "value": 55 },
+    { "label_fr": "… chez les ouvriers", "label_en": "… among manual workers", "value": 75 },
+    { "label_fr": "Ne voudraient pas d’un Master Poulet dans leur rue", "label_en": "Would not want one on their street", "value": 67 },
+    { "label_fr": "… mais s’y opposent dans un autre quartier", "label_en": "… but oppose it in another neighborhood", "value": 47 }
+  ]
+}

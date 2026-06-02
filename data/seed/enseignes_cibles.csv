@@ -1,0 +1,3 @@
+name,brand,address,postcode,city,code_commune,lat,lon,opening_date,provenance,notes
+Master Poulet Saint-Ouen,master_poulet,rue Albert-Dhalenne,93400,Saint-Ouen-sur-Seine,93070,48.9056,2.3340,2026-04-11,seed_press,"Restaurant au cœur de l'affaire d'avril 2026 (secteur métro Mairie de Saint-Ouen). Coordonnées approximatives, à confirmer par géocodage."
+Tasty Crousti Melun,tasty_crousti,,77000,Melun,77288,,,,seed_press,"Fermeture administrative pour motif sanitaire (avril 2026). Hors périmètre Grand Paris : documenté mais non cartographié dans le MVP."

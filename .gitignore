@@ -1,0 +1,29 @@
+# dependencies
+/node_modules
+
+# Observable Framework
+/dist
+.observablehq/
+**/.observablehq/
+
+# pipeline: raw + staging data are reproducible from URLs — never commit
+/data/raw/
+/data/staging/
+/pipeline/.duckdb/
+*.duckdb
+*.duckdb.wal
+
+# but DO commit the small published artefacts the site consumes:
+!/data/publish/
+
+# os / editors
+.DS_Store
+Thumbs.db
+*.log
+.env
+.env.local
+
+# handoff bundle + raw verification screenshots (docs/img holds the curated ones)
+/design-handoff/
+/design-handoff.zip
+/test/shots/

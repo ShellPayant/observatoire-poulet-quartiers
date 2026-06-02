@@ -1,0 +1,33 @@
+{
+  "name": "poulet-quartiers",
+  "version": "0.1.0",
+  "type": "module",
+  "private": true,
+  "description": "Observatoire Poulet & Quartiers — interactive bilingual open-data observatory on the neighborhood footprint of low-cost halal fast-food chicken chains in France.",
+  "license": "MIT",
+  "scripts": {
+    "dev": "observable preview",
+    "build": "observable build",
+    "deploy": "observable deploy",
+    "clean": "observable clean",
+    "pipeline": "node pipeline/run.js",
+    "pipeline:dvf": "node pipeline/10_dvf.js",
+    "pipeline:chains": "node pipeline/20_chains.js",
+    "pipeline:socio": "node pipeline/30_socio_crime_geo.js",
+    "pipeline:summary": "node pipeline/40_summary.js"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "devDependencies": {
+    "@observablehq/framework": "^1.13.4",
+    "puppeteer-core": "^25.1.0"
+  },
+  "dependencies": {
+    "@duckdb/node-api": "^1.5.3-r.3",
+    "@observablehq/plot": "^0.6.17",
+    "d3-dsv": "^3.0.1",
+    "maplibre-gl": "^5.24.0",
+    "pmtiles": "^4.4.1"
+  }
+}
