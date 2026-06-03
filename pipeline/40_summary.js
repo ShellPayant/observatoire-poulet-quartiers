@@ -17,6 +17,7 @@ async function main() {
   const counts = await maybe("fastfood_counts.json");
   const crime = await maybe("crime_communes.json");
   const cibles = await maybe("enseignes_cibles.geojson");
+  const survival = await maybe("fastfood_survival.json");
 
   const soPrice = (bench?.communes || []).filter((r) => r.code_commune === SO).sort((a, b) => a.annee - b.annee);
   const soPriceLatest = soPrice.at(-1);
@@ -72,6 +73,17 @@ async function main() {
       id: "ifop_maire", label_fr: "Français approuvant l’action du maire (Ifop, mai 2026)",
       label_en: "French approving the mayor’s action (Ifop, May 2026)",
       value: 55, unit: "%", level: "documenté", source: "ifop_darwin"
+    },
+    survival?.national && {
+      id: "ff_median_life", label_fr: "Durée de vie médiane d’un fast-food fermé (France)",
+      label_en: "Median lifespan of a closed fast-food (France)",
+      value: survival.national.median_life_years, unit: "ans", level: "émergent", source: "sirene_stock",
+      caveat_fr: "date de fermeture approchée (SIRENE)", caveat_en: "approximate closure date (SIRENE)"
+    },
+    survival?.national && {
+      id: "ff_n_closed", label_fr: "Fast-foods fermés recensés (France, SIRENE)",
+      label_en: "Closed fast-food shops on record (France, SIRENE)",
+      value: survival.national.n_closed, unit: "", level: "documenté", source: "sirene_stock"
     }
   ].filter(Boolean);
 

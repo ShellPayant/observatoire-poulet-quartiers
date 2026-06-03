@@ -51,6 +51,11 @@ display(strip);
     <b>Comparer deux quartiers</b>
     <div style="font-size:.85rem;color:var(--theme-foreground-muted)">Mettez deux communes côte à côte : prix, restauration rapide, contexte de délinquance.</div>
   </a>
+  <a class="pq-modecard" href="/mon-quartier">
+    <div style="font-size:1.6rem">🏘️</div>
+    <b>Mon quartier <span class="pq-badge pq-badge--documenté" style="vertical-align:middle">nouveau</span></b>
+    <div style="font-size:.85rem;color:var(--theme-foreground-muted)">Tapez votre adresse : combien de fast-foods autour de vous, lesquels ont fermé ou fait faillite, et combien de temps ils tiennent (toute la France).</div>
+  </a>
 </div>
 
 ## Comment lire ce site

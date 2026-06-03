@@ -55,6 +55,9 @@ A two-sided case study: the timeline, the **price trend**, a focused map, a *"dr
 <img src="docs/img/case-study.png" alt="Saint-Ouen case study" width="49%">
 </div>
 
+### 🏘️ My neighborhood *(new)*
+Type **any French address** → the **life & death of the fast-food shops around you**: how many, which brands, which **closed or went bankrupt**, and **how long they last** (a survival curve vs. your commune & France), with a downloadable **share card**. National **SIRENE** survival data + **live BODACC** bankruptcy lookups. Honest by design: closures are normal small-business churn, independents are never named, and revenue is shown only where public.
+
 Plus a **two-commune comparison**, a transparent **Methods & limits** page, a **"money-laundering: proven vs. rumour"** explainer, a **sources** registry, and a full **English mirror**.
 
 ---
@@ -69,6 +72,8 @@ Scope: **Greater Paris** — Paris (75) · Hauts-de-Seine (92) · Seine-Saint-De
 | 🍔 Fast-food density | **OpenStreetMap** `amenity=fast_food` | ✅ real — 4 999 POIs *(non-exhaustive)* |
 | 🍗 Target chicken/crousti outlets | OSM brand match + reference seed | ✅ real — 64 outlets |
 | 🚨 Recorded crime (commune, 2016–2025) | **SSMSI** (Ministère de l'Intérieur) | ✅ real *(municipal only, gated)* |
+| 🏘️ Fast-food **survival, closures & lifespan** (national) | **SIRENE** (INSEE) | ✅ real — **393k shops, 233k already closed** |
+| ⚖️ **Bankruptcies** (live, on-demand) | **BODACC** (DILA) | ✅ real — queried by SIREN in the browser |
 | 🗺️ Boundaries & basemap | **IGN** Géoplateforme | ✅ real |
 | 💶 Income / poverty (Filosofi) · SIRENE 56.10C | INSEE | ⏳ national version |
 

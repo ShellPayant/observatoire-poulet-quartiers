@@ -13,7 +13,8 @@ export default {
         { name: "Accueil", path: "/index" },
         { name: "L’affaire Saint-Ouen", path: "/affaire-saint-ouen" },
         { name: "Explorer la carte", path: "/explorer" },
-        { name: "Comparer deux quartiers", path: "/comparer" }
+        { name: "Comparer deux quartiers", path: "/comparer" },
+        { name: "Mon quartier", path: "/mon-quartier" }
       ]
     },
     {
@@ -30,6 +31,7 @@ export default {
       pages: [
         { name: "Home", path: "/en/index" },
         { name: "The Saint-Ouen affair", path: "/en/affaire-saint-ouen" },
+        { name: "My neighborhood", path: "/en/my-neighborhood" },
         { name: "Methods & limits", path: "/en/methodes" }
       ]
     }

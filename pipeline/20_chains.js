@@ -11,6 +11,7 @@
 //   src/data/enseignes_cibles.geojson — target-brand outlets + the seed flagship
 import { openDb, loadSpatial, rows } from "./lib/db.js";
 import { writeJSON, fetchWithRetry, log, exists, RAW, SEED, PUBLISH } from "./lib/util.js";
+import { brandCase } from "./lib/brands.js";
 import { resolve } from "node:path";
 import { mkdir, writeFile, readFile } from "node:fs/promises";
 
@@ -24,17 +25,9 @@ const OVERPASS = [
 ];
 const UA = "ObservatoirePouletQuartiers/0.1 (civic open-data project; contact: observatoire@example.org)";
 
-// Brand normalisation: lower(name|brand|operator) → canonical key.
-const BRAND_SQL = `
-  CASE
-    WHEN nm ~ 'master\\s*poulet'                         THEN 'master_poulet'
-    WHEN nm ~ 'tasty\\s*crous|crousti|krousty'           THEN 'tasty_crousti'
-    WHEN nm ~ 'poulet\\s*brais|pb\\s*poulet'             THEN 'pb_poulet_braise'
-    WHEN nm ~ 'chik.?chill'                              THEN 'chik_chill'
-    WHEN nm ~ 'chicken\\s*(street|spot|nation|time|house)' THEN 'chicken_autre'
-    WHEN nm ~ 'crous|poulet|chicken'                     THEN 'poulet_autre'
-    ELSE NULL
-  END`;
+// Brand normalisation: lower(name|brand|operator) → canonical key (shared classifier).
+// OSM wants unknown → NULL (not "independant"), so we null-out the SIRENE-style fallback.
+const BRAND_SQL = `NULLIF(${brandCase("nm")}, 'independant')`;
 
 async function fetchOverpass() {
   const query = `[out:json][timeout:90];

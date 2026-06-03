@@ -39,6 +39,7 @@ display(strip);
   <a class="pq-modecard" href="/en/affaire-saint-ouen"><div style="font-size:1.6rem">📍</div><b>The Saint-Ouen affair</b><div style="font-size:.85rem;color:var(--theme-foreground-muted)">The story, the timeline, property prices and the debate — on one concrete case, two-sided.</div></a>
   <a class="pq-modecard" href="/explorer"><div style="font-size:1.6rem">🗺️</div><b>Explore the map</b><div style="font-size:.85rem;color:var(--theme-foreground-muted)">Prices, fast-food density, target chains, municipal crime. (French UI)</div></a>
   <a class="pq-modecard" href="/comparer"><div style="font-size:1.6rem">⚖️</div><b>Compare two areas</b><div style="font-size:.85rem;color:var(--theme-foreground-muted)">Put two municipalities side by side. (French UI)</div></a>
+  <a class="pq-modecard" href="/en/my-neighborhood"><div style="font-size:1.6rem">🏘️</div><b>My neighborhood <span class="pq-badge pq-badge--documenté" style="vertical-align:middle">new</span></b><div style="font-size:.85rem;color:var(--theme-foreground-muted)">Type your address: how many fast-food shops around you, which closed or went bankrupt, and how long they last (all of France).</div></a>
 </div>
 
 ## How to read this site

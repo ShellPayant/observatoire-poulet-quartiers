@@ -1,6 +1,48 @@
 {
   "_comment": "Single source of truth for datasets. Drives /sources, footers, and every <SourceLine>. Edited by hand; consumed by the site.",
   "datasets": {
+    "sirene_stock": {
+      "id": "sirene_stock",
+      "name_fr": "Base SIRENE des établissements (INSEE)",
+      "name_en": "SIRENE establishments register (INSEE)",
+      "producer": "INSEE",
+      "license": "Licence Ouverte / Etalab 2.0",
+      "homepage": "https://www.data.gouv.fr/datasets/base-sirene-des-entreprises-et-de-leurs-etablissements-siren-siret/",
+      "access_url": "https://www.data.gouv.fr/datasets/base-sirene-des-entreprises-et-de-leurs-etablissements-siren-siret/",
+      "grain": "établissement (SIRET)",
+      "version": "stock mensuel + géolocalisation",
+      "join_key": "siret, siren",
+      "coverage_note_fr": "Date de création, état (actif/fermé), enseigne et NAF 56.10C ; coordonnées via le fichier de géolocalisation INSEE. La date de fermeture est approchée (dernier traitement) en attendant l’historique des périodes.",
+      "coverage_note_en": "Creation date, open/closed status, brand and NAF 56.10C; coordinates from the INSEE geolocation file. Closure date is approximated (last processing) pending the period history."
+    },
+    "bodacc": {
+      "id": "bodacc",
+      "name_fr": "BODACC — annonces commerciales (procédures collectives)",
+      "name_en": "BODACC — commercial notices (insolvency proceedings)",
+      "producer": "DILA",
+      "license": "Licence Ouverte / Etalab 2.0",
+      "homepage": "https://bodacc-datadila.opendatasoft.com/explore/dataset/annonces-commerciales/",
+      "access_url": "https://bodacc-datadila.opendatasoft.com/api/explore/v2.1/catalog/datasets/annonces-commerciales/records",
+      "grain": "annonce (par SIREN)",
+      "version": "API en direct (depuis 2008)",
+      "join_key": "siren (registre)",
+      "coverage_note_fr": "Procédures collectives (liquidation, redressement, sauvegarde) publiées au BODACC, interrogées en direct par SIREN. Une procédure n’implique pas toujours une fermeture.",
+      "coverage_note_en": "Insolvency proceedings published in BODACC, queried live by SIREN. A proceeding does not always mean closure."
+    },
+    "inpi_rne": {
+      "id": "inpi_rne",
+      "name_fr": "Annuaire des Entreprises / INPI (taille & comptes)",
+      "name_en": "Annuaire des Entreprises / INPI (size & accounts)",
+      "producer": "DINUM / INPI",
+      "license": "Licence Ouverte / Etalab 2.0",
+      "homepage": "https://annuaire-entreprises.data.gouv.fr/",
+      "access_url": "https://recherche-entreprises.api.gouv.fr/",
+      "grain": "unité légale (SIREN)",
+      "version": "API en direct",
+      "join_key": "siren",
+      "coverage_note_fr": "Nombre d’établissements, tranche d’effectif, catégorie ; chiffre d’affaires uniquement si les comptes sont publics (≈ 60 % des petites sociétés les déposent confidentiels).",
+      "coverage_note_en": "Number of establishments, headcount band, category; revenue only when accounts are public (≈ 60 % of small companies file them confidentially)."
+    },
     "dvf": {
       "id": "dvf",
       "name_fr": "Demandes de valeurs foncières géolocalisées (DVF)",

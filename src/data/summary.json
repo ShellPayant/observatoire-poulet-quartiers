@@ -1,5 +1,5 @@
 {
-  "generated": "2026-06-02",
+  "generated": "2026-06-03",
   "scope_fr": "Grand Paris — Paris (75), Hauts-de-Seine (92), Seine-Saint-Denis (93), Val-de-Marne (94)",
   "kpis": [
     {
@@ -34,7 +34,7 @@
       "id": "cibles_total",
       "label_fr": "Enseignes-cibles poulet/crousti localisées",
       "label_en": "Target chicken/crousti outlets located",
-      "value": 64,
+      "value": 110,
       "unit": "",
       "level": "émergent",
       "source": "osm",
@@ -68,6 +68,26 @@
       "unit": "%",
       "level": "documenté",
       "source": "ifop_darwin"
+    },
+    {
+      "id": "ff_median_life",
+      "label_fr": "Durée de vie médiane d’un fast-food fermé (France)",
+      "label_en": "Median lifespan of a closed fast-food (France)",
+      "value": 9.6,
+      "unit": "ans",
+      "level": "émergent",
+      "source": "sirene_stock",
+      "caveat_fr": "date de fermeture approchée (SIRENE)",
+      "caveat_en": "approximate closure date (SIRENE)"
+    },
+    {
+      "id": "ff_n_closed",
+      "label_fr": "Fast-foods fermés recensés (France, SIRENE)",
+      "label_en": "Closed fast-food shops on record (France, SIRENE)",
+      "value": 233152,
+      "unit": "",
+      "level": "documenté",
+      "source": "sirene_stock"
     }
   ],
   "saint_ouen": {

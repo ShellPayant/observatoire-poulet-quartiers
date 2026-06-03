@@ -9,6 +9,7 @@ const STAGES = [
   ["30_geo.js", "commune & arrondissement boundaries"],
   ["10_dvf.js", "DVF real-estate prices"],
   ["20_chains.js", "fast-food + target chains (OSM)"],
+  ["22_sirene_ff.js", "national fast-food survival (SIRENE)"],
   ["32_crime.js", "SSMSI commune crime"],
   ["40_summary.js", "headline KPIs + Saint-Ouen dashboard"]
 ];

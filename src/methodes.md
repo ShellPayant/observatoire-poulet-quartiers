@@ -69,6 +69,9 @@ display(lg);
 ### « Devinez puis comparez » ${evidenceBadge("documenté","fr")}
 Une invitation à confronter votre intuition aux données réelles. Le graphe révélé est **strictement descriptif** : il ne mesure aucun effet de l’enseigne.
 
+### Mon quartier : survie, fermetures & faillites ${evidenceBadge("documenté","fr")}
+**Sources :** base **SIRENE** (INSEE) pour la création, l’état (actif/fermé) et l’enseigne de chaque établissement de restauration rapide (NAF 56.10C) — ~430 000 au niveau national, géolocalisés ; **BODACC** (interrogé en direct) pour les procédures collectives (faillites) ; **Annuaire des Entreprises** pour la taille des enseignes connues. **Survie :** méthode discrète façon Kaplan-Meier (parmi les établissements assez vieux pour avoir pu atteindre l’âge t, part encore ouverte) — **étiquetée « émergent »** car descriptive. **Limites assumées :** la **date de fermeture** est approchée (dernier traitement SIRENE) ; **faillite ≠ fermeture** ; les **indépendants ne sont jamais nommés** ; le **chiffre d’affaires** est rarement public (≈ 60 % de comptes confidentiels) ; couverture **SIRENE** (univers légal), différente de la couche **OpenStreetMap** de l’explorateur.
+
 ## Ce que nous avons délibérément refusé de faire
 
 - **Aucune carte du « blanchiment ».** Le risque général des activités à forte intensité de liquide est documenté, mais **aucune affaire visant ces enseignes n’est établie**. Voir [Débat : blanchiment ?](/debats/blanchiment).

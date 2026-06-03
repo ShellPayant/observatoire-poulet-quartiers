@@ -6,15 +6,15 @@ import { mkdir } from "node:fs/promises";
 const EXE = "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe";
 const BASE = process.env.BASE || "http://127.0.0.1:3000";
 const PAGES = [
-  "/", "/affaire-saint-ouen", "/explorer", "/comparer",
+  "/", "/affaire-saint-ouen", "/explorer", "/comparer", "/mon-quartier",
   "/methodes", "/sources", "/debats/blanchiment", "/a-propos",
-  "/en/", "/en/affaire-saint-ouen", "/en/methodes"
+  "/en/", "/en/affaire-saint-ouen", "/en/my-neighborhood", "/en/methodes"
 ];
-const MAP_PAGES = new Set(["/affaire-saint-ouen", "/explorer", "/en/affaire-saint-ouen"]);
+const MAP_PAGES = new Set(["/affaire-saint-ouen", "/explorer", "/mon-quartier", "/en/affaire-saint-ouen", "/en/my-neighborhood"]);
 const SHOTS = new Set(["/", "/affaire-saint-ouen", "/explorer", "/comparer", "/methodes"]);
 
 // Errors from the IGN basemap / glyphs / CDN CSS are environmental, not app bugs.
-const BENIGN = /geopf\.fr|demotiles|unpkg\.com|favicon|AJAXError|Failed to fetch|net::ERR|status of 4|status of 5|tile/i;
+const BENIGN = /geopf\.fr|demotiles|unpkg\.com|favicon|AJAXError|Failed to fetch|net::ERR|status of 4|status of 5|tile|bodacc|opendatasoft|recherche-entreprises|api\.gouv\.fr/i;
 
 await mkdir("test/shots", { recursive: true });
 const browser = await puppeteer.launch({ executablePath: EXE, headless: true, args: ["--no-sandbox", "--disable-gpu", "--window-size=1280,900"] });
