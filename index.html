@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="fr" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Observatoire Poulet & Quartiers — Les données ouvertes, l'avis libre</title>
+<meta name="description" content="Observatoire indépendant et bilingue : données ouvertes sur l'empreinte des fast-foods de poulet à bas prix en Île-de-France. Données et clarté — chacun se fait son avis.">
+<link rel="stylesheet" href="assets/tokens.css">
+<style>
+  /* ---------- Monumental hero ---------- */
+  .hero { position: relative; padding-top: clamp(1.5rem, 3vw, 3rem); padding-bottom: clamp(2rem, 4vw, 3.5rem); overflow: hidden; }
+  .hero__grid { display: grid; grid-template-columns: 1.02fr .98fr; gap: clamp(1.5rem, 4vw, 4rem); align-items: center; }
+  .hero__eyebrow { display: inline-flex; align-items: center; gap: .6rem; margin-bottom: 1.3rem; }
+  .hero__dot { width: 7px; height: 7px; transform: rotate(45deg); background: var(--gold); box-shadow: 0 0 0 4px var(--accent-tint); flex: none; }
+  .hero h1 { font-size: clamp(2.5rem, 1.4rem + 3.6vw, 4.6rem); font-weight: 500; letter-spacing: -.022em; line-height: 1.08; }
+  .hero h1 em { font-style: italic; }
+  .hero__sub { font-size: clamp(1.05rem, .95rem + .5vw, 1.32rem); color: var(--ink-2); max-width: 34ch; margin: 1.5rem 0 2rem; line-height: 1.55; }
+  .hero__cta { display: flex; flex-wrap: wrap; gap: .7rem; }
+  .hero__trust { display: flex; flex-wrap: wrap; gap: 1.2rem 1.6rem; margin-top: 2.2rem; }
+  .hero__trust .item { display: flex; align-items: center; gap: .45rem; font-family: var(--font-mono); font-size: var(--t-mono); color: var(--ink-3); letter-spacing: .02em; }
+  .hero__trust .ck { color: var(--accent-strong); font-weight: 700; }
+
+  /* Framed portico image — the "artwork on the wall" */
+  .frame { position: relative; align-self: stretch; }
+  .frame__mat {
+    position: relative; padding: 12px; border-radius: 6px;
+    background: linear-gradient(150deg, var(--gold), var(--accent-strong) 45%, var(--gold-lo) 75%, var(--accent-deep));
+    box-shadow: var(--shadow-3);
+  }
+  .frame__inner { position: relative; overflow: hidden; border-radius: 3px; background: var(--surface-3); aspect-ratio: 100/118; }
+  .frame__img { position: absolute; inset: -6% 0 -6% 0; width: 100%; height: 112%; object-fit: cover; object-position: center 40%; will-change: transform; }
+  .frame__grad { position: absolute; inset: 0; background: linear-gradient(to top, rgba(30,20,8,.46), rgba(30,20,8,.05) 38%, transparent 60%); }
+  .frame__sweep { position: absolute; top: 0; bottom: 0; left: 0; width: 32%; pointer-events: none;
+    background: linear-gradient(100deg, transparent, rgba(255,250,235,.55), transparent); mix-blend-mode: screen;
+    animation: sweep 7.5s ease-in-out 1.2s infinite; }
+  @media (prefers-reduced-motion: reduce) { .frame__sweep { display: none; } }
+  /* Gilded plaque overlapping the frame */
+  .plaque { position: absolute; left: -18px; bottom: 64px; background: var(--surface); border: 1px solid var(--line-2); border-left: 4px solid var(--accent);
+    border-radius: var(--r-sm); padding: .7rem .9rem; box-shadow: var(--shadow-2); max-width: 215px; }
+  .plaque .v { font-family: var(--font-display); font-size: 1.6rem; font-weight: 600; line-height: 1; }
+  .plaque .v .u { font-size: .5em; color: var(--ink-2); }
+  .plaque .c { font-size: var(--t-xs); color: var(--ink-2); margin-top: .25rem; line-height: 1.35; }
+  .plaque .badge { margin-top: .5rem; }
+  /* engraved caption under the frame */
+  .frame__cap { margin-top: .8rem; text-align: center; font-family: var(--font-mono); font-size: var(--t-mono); color: var(--ink-3); letter-spacing: .06em; }
+
+  .scrollcue { display: flex; justify-content: center; margin-top: 2.5rem; }
+  .scrollcue span { font-family: var(--font-mono); font-size: var(--t-mono); color: var(--ink-3); letter-spacing: .14em; text-transform: uppercase; display: inline-flex; flex-direction: column; align-items: center; gap: .5rem; }
+  .scrollcue .ar { width: 1px; height: 34px; background: linear-gradient(var(--gold), transparent); position: relative; }
+  .scrollcue .ar::after { content: ""; position: absolute; bottom: 0; left: -3px; width: 7px; height: 7px; border-right: 1px solid var(--gold); border-bottom: 1px solid var(--gold); transform: rotate(45deg); animation: cuebob 1.8s ease-in-out infinite; }
+  @keyframes cuebob { 0%,100%{ transform: rotate(45deg) translateY(0); opacity:.4 } 50%{ transform: rotate(45deg) translateY(4px); opacity:1 } }
+
+  /* frieze divider strip */
+  .frieze-strip { height: 46px; background: url('assets/img/frieze.png') center/auto 220% repeat-x; opacity: .5; border-block: 1px solid var(--line); filter: sepia(.2); }
+
+  /* ---------- KPI strip ---------- */
+  .section { padding-block: clamp(2.5rem, 5vw, 4rem); }
+  .section__head { display: flex; align-items: flex-end; justify-content: space-between; gap: 1rem; margin-bottom: 1.5rem; flex-wrap: wrap; }
+  .section__head h2 { max-width: 22ch; }
+  .kpi-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; }
+  .kpi-grid .kpi.span2 { grid-column: span 2; }
+
+  /* ---------- How to read ---------- */
+  .read { background: var(--surface-2); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+  .read__grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.1rem; margin-top: 1.6rem; }
+  .read__card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-lg); padding: 1.3rem; border-top: 4px solid; }
+  .read__card.doc { border-top-color: var(--doc); }
+  .read__card.eme { border-top-color: var(--eme); }
+  .read__card.con { border-top-color: var(--con); }
+  .read__glyph { width: 40px; height: 40px; border-radius: 50%; display: grid; place-items: center; font-weight: 700; font-size: 1.2rem; margin-bottom: .8rem; }
+  .read__card.doc .read__glyph { background: var(--doc-soft); color: var(--doc); }
+  .read__card.eme .read__glyph { background: var(--eme-soft); color: var(--eme); }
+  .read__card.con .read__glyph { background: var(--con-soft); color: var(--con); }
+  .read__card h3 { font-family: var(--font-sans); font-size: 1.05rem; font-weight: 700; margin-bottom: .35rem; }
+  .read__card p { font-size: var(--t-sm); color: var(--ink-2); margin: 0; }
+
+  /* ---------- Modes ---------- */
+  .modes { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.1rem; margin-top: 1.5rem; }
+  .mode {
+    display: flex; flex-direction: column; gap: .6rem; padding: 1.4rem; text-decoration: none; color: inherit;
+    background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-lg); box-shadow: var(--shadow-1);
+    transition: transform .15s ease, box-shadow .15s ease, border-color .15s ease; position: relative; overflow: hidden;
+  }
+  .mode:hover { transform: translateY(-3px); box-shadow: var(--shadow-2); border-color: var(--line-2); }
+  .mode--feat { border-color: var(--accent); box-shadow: inset 0 0 0 1px var(--accent), var(--shadow-2); background: linear-gradient(170deg, var(--accent-tint), var(--surface) 55%); }
+  .mode--feat:hover { border-color: var(--accent-strong); }
+  .mode__new { position: absolute; top: 1rem; right: 1rem; font-family: var(--font-mono); font-size: 10px; letter-spacing: .1em; text-transform: uppercase; font-weight: 600; color: var(--on-accent); background: linear-gradient(180deg,var(--accent),var(--accent-strong)); padding: .2rem .55rem; border-radius: var(--r-pill); }
+  .mode__ic { width: 46px; height: 46px; border-radius: var(--r-md); display: grid; place-items: center; background: var(--accent-tint); color: var(--accent-strong); }
+  .mode h3 { font-family: var(--font-sans); font-size: 1.15rem; font-weight: 700; }
+  .mode p { font-size: var(--t-sm); color: var(--ink-2); margin: 0; }
+  .mode__go { margin-top: auto; font-family: var(--font-mono); font-size: var(--t-mono); color: var(--accent-strong); font-weight: 600; display: inline-flex; align-items: center; gap: .35rem; }
+  .mode:hover .mode__go { gap: .6rem; }
+
+  /* ---------- Neutrality ---------- */
+  .neutral { display: grid; grid-template-columns: auto 1fr; gap: 1.2rem; align-items: start; background: var(--accent-tint); border: 1px solid var(--accent-soft); border-radius: var(--r-lg); padding: 1.5rem 1.7rem; }
+  .neutral__scale { width: 44px; height: 44px; color: var(--accent-strong); flex: none; }
+  .neutral p { font-size: var(--t-sm); color: var(--ink-2); margin: .4rem 0 0; }
+  .neutral b { color: var(--ink); }
+
+  @media (max-width: 900px) {
+    .hero__grid { grid-template-columns: 1fr; }
+    .frame { max-width: 460px; margin-inline: auto; order: -1; }
+    .plaque { left: 8px; }
+    .kpi-grid { grid-template-columns: repeat(2, 1fr); }
+    .read__grid, .modes { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 520px) {
+    .kpi-grid { grid-template-columns: 1fr; }
+    .kpi-grid .kpi.span2 { grid-column: span 1; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ===================== NAV ===================== -->
+<header class="nav">
+  <div class="wrap nav__in">
+    <a class="brand" href="index.html" aria-label="Accueil">
+      <svg width="30" height="30" viewBox="0 0 32 32" aria-hidden="true">
+        <path d="M16 2C10.5 2 6 6.4 6 11.9c0 7.2 8.4 16.5 9.2 17.4a1.1 1.1 0 0 0 1.6 0c.8-.9 9.2-10.2 9.2-17.4C26 6.4 21.5 2 16 2Z" fill="var(--accent)"/>
+        <circle cx="16" cy="12" r="4.4" fill="var(--paper)"/>
+      </svg>
+      <span class="brand__name">Observatoire <span class="amp">&</span> Quartiers</span>
+    </a>
+    <button class="icon-btn nav__burger" aria-label="Menu" aria-expanded="false" aria-controls="nav-links">☰</button>
+    <nav class="nav__links" id="nav-links" aria-label="Navigation principale">
+      <a class="nav__link" href="mon-quartier.html" data-fr="Mon quartier" data-en="My neighborhood">Mon quartier</a>
+      <a class="nav__link" href="affaire-saint-ouen.html" data-fr="L'affaire Saint-Ouen" data-en="The Saint-Ouen affair">L'affaire Saint-Ouen</a>
+      <a class="nav__link" href="explorer.html" data-fr="Explorer la carte" data-en="Explore the map">Explorer la carte</a>
+      <a class="nav__link" href="explorer.html#comparer" data-fr="Comparer" data-en="Compare">Comparer</a>
+      <a class="nav__link" href="systeme.html" data-fr="Méthodes" data-en="Methods">Méthodes</a>
+      <a class="nav__link" href="systeme.html" data-fr="Sources" data-en="Sources">Sources</a>
+    </nav>
+    <div class="nav__tools">
+      <div class="lang" role="group" aria-label="Langue">
+        <button data-lang="fr" aria-pressed="true">FR</button>
+        <button data-lang="en" aria-pressed="false">EN</button>
+      </div>
+      <button class="icon-btn" data-theme-toggle aria-label="Thème">☾</button>
+    </div>
+  </div>
+</header>
+
+<main>
+<!-- ===================== HERO ===================== -->
+<section class="hero marble">
+  <div class="wrap hero__grid">
+    <div class="reveal">
+      <span class="hero__eyebrow eyebrow"><span class="hero__dot"></span><span data-fr="Observatoire indépendant · données ouvertes" data-en="Independent observatory · open data">Observatoire indépendant · données ouvertes</span></span>
+      <h1 data-fr-html="Le débat du poulet, à l'échelle d'un <em class=&quot;gild&quot;>monument</em>." data-en-html="The chicken debate, at the scale of a <em class=&quot;gild&quot;>monument</em>.">Le débat du poulet, à l'échelle d'un <em class="gild">monument</em>.</h1>
+      <p class="hero__sub" data-fr="La « guerre du poulet » déborde de chiffres assénés. Nous donnons aux données publiques la gravité qu'elles méritent — et vous laissons juger." data-en="The “chicken war” overflows with unsourced numbers. We give the public data the gravity it deserves — and let you judge.">La « guerre du poulet » déborde de chiffres assénés. Nous donnons aux données publiques la gravité qu'elles méritent — et vous laissons juger.</p>
+      <div class="hero__cta">
+        <a class="btn btn--primary" href="explorer.html" data-fr="Explorer la carte" data-en="Explore the map">Explorer la carte</a>
+        <a class="btn btn--ghost" href="affaire-saint-ouen.html" data-fr="L'affaire Saint-Ouen" data-en="The Saint-Ouen affair">L'affaire Saint-Ouen</a>
+      </div>
+      <div class="hero__trust">
+        <span class="item"><span class="ck">✓</span><span data-fr="Chaque chiffre sourcé" data-en="Every figure sourced">Chaque chiffre sourcé</span></span>
+        <span class="item"><span class="ck">✓</span><span data-fr="Sans cookie, sans pisteur" data-en="No cookies, no trackers">Sans cookie, sans pisteur</span></span>
+        <span class="item"><span class="ck">✓</span><span data-fr="Bilingue FR / EN" data-en="Bilingual FR / EN">Bilingue FR / EN</span></span>
+      </div>
+    </div>
+
+    <!-- Framed portico, with gilded stat plaque -->
+    <figure class="frame reveal reveal-d2" style="margin:0">
+      <div class="frame__mat">
+        <div class="frame__inner">
+          <img class="frame__img" id="heroImg" src="assets/img/hero.png" alt="Portique néoclassique en marbre, colonnes cannelées baignées de lumière dorée — une image d'archive choisie pour sa monumentalité.">
+          <div class="frame__grad"></div>
+          <div class="frame__sweep"></div>
+        </div>
+      </div>
+      <figcaption class="frame__cap" data-fr="Étude — portique &amp; marbre · la donnée comme patrimoine commun" data-en="Study — portico &amp; marble · data as common heritage">Étude — portique &amp; marbre · la donnée comme patrimoine commun</figcaption>
+      <div class="plaque">
+        <div class="v">6&nbsp;399<span class="u"> €/m²</span></div>
+        <div class="c" data-fr="Saint-Ouen, 2024 — et pourtant −9 % depuis 2021." data-en="Saint-Ouen, 2024 — yet −9% since 2021.">Saint-Ouen, 2024 — et pourtant −9&nbsp;% depuis 2021.</div>
+        <span class="badge badge--doc"><span class="g">✓</span>documenté</span>
+      </div>
+    </figure>
+  </div>
+
+  <div class="wrap scrollcue reveal reveal-d3"><span><span data-fr="Descendre" data-en="Scroll">Descendre</span><span class="ar"></span></span></div>
+</section>
+
+<div class="frieze-strip" aria-hidden="true"></div>
+
+
+<!-- ===================== KPI STRIP ===================== -->
+<section class="section">
+  <div class="wrap">
+    <div class="section__head reveal">
+      <h2 data-fr="Du Grand Paris à la France, en chiffres vérifiables" data-en="From Greater Paris to France, in verifiable numbers">Du Grand Paris à la France, en chiffres vérifiables</h2>
+      <span class="tag" data-fr="Carte : Paris · 92 · 93 · 94 — Survie : France entière" data-en="Map: Paris · 92 · 93 · 94 — Survival: all of France">Carte : Paris · 92 · 93 · 94 — Survie : France entière</span>
+    </div>
+    <div class="kpi-grid" id="kpiGrid"></div>
+    <p class="source" style="margin-top:1rem" data-fr="Données arrêtées au millésime le plus récent disponible par source. Cliquez « source » sur chaque carte." data-en="Figures dated by their source vintage. Click “source” on each card.">Données arrêtées au millésime le plus récent disponible par source. Cliquez « source » sur chaque carte.</p>
+  </div>
+</section>
+
+<!-- ===================== HOW TO READ ===================== -->
+<section class="read section">
+  <div class="wrap">
+    <span class="eyebrow" data-fr="La règle de la maison" data-en="The house rule">La règle de la maison</span>
+    <h2 style="margin-top:.6rem;max-width:24ch" data-fr="Jamais une corrélation pour une cause, ni une rumeur pour un fait." data-en="Never a correlation for a cause, nor a rumor for a fact.">Jamais une corrélation pour une cause, ni une rumeur pour un fait.</h2>
+    <p class="muted" style="max-width:52ch;margin-top:.7rem" data-fr="Chaque chiffre du site porte l'une de ces trois étiquettes. Couleur et symbole, pour rester lisible par tous." data-en="Every figure on the site carries one of these three labels. Color and symbol, so everyone can read it.">Chaque chiffre du site porte l'une de ces trois étiquettes. Couleur et symbole, pour rester lisible par tous.</p>
+    <div class="read__grid">
+      <div class="read__card doc reveal">
+        <div class="read__glyph">✓</div>
+        <h3>documenté</h3>
+        <p data-fr="Fait établi et sourcé — donnée officielle ou fait de presse recoupé." data-en="Established, sourced fact — official data or cross-checked reporting.">Fait établi et sourcé — donnée officielle ou fait de presse recoupé.</p>
+      </div>
+      <div class="read__card eme reveal reveal-d1">
+        <div class="read__glyph">~</div>
+        <h3>émergent</h3>
+        <p data-fr="Piste plausible mais non démontrée — à interpréter avec prudence." data-en="Plausible but unproven lead — interpret with caution.">Piste plausible mais non démontrée — à interpréter avec prudence.</p>
+      </div>
+      <div class="read__card con reveal reveal-d2">
+        <div class="read__glyph">!</div>
+        <h3>contesté</h3>
+        <p data-fr="Affirmation discutée ou non étayée — présentée pour information, pas validée." data-en="Disputed or unsupported claim — shown for information, not endorsed.">Affirmation discutée ou non étayée — présentée pour information, pas validée.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== THREE MODES ===================== -->
+<section class="section">
+  <div class="wrap">
+    <span class="eyebrow" data-fr="Quatre façons d'explorer" data-en="Four ways to explore">Quatre façons d'explorer</span>
+    <div class="modes">
+      <a class="mode mode--feat reveal" href="mon-quartier.html">
+        <span class="mode__new" data-fr="Nouveau" data-en="New">Nouveau</span>
+        <div class="mode__ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21c5-5 7-8.6 7-12a7 7 0 1 0-14 0c0 3.4 2 7 7 12Z"/><circle cx="12" cy="9" r="2.4"/><path d="M3 21h18"/></svg></div>
+        <h3 data-fr="Mon quartier" data-en="My neighborhood">Mon quartier</h3>
+        <p data-fr="Tapez votre adresse : la vie & la mort des fast-foods autour de vous — fermetures, faillites, durée de vie, carte partageable." data-en="Type your address: the life & death of the fast-food shops around you — closures, bankruptcies, lifespan, shareable card.">Tapez votre adresse : la vie & la mort des fast-foods autour de vous — fermetures, faillites, durée de vie, carte partageable.</p>
+        <span class="mode__go" data-fr="Analyser mon adresse →" data-en="Analyze my address →">Analyser mon adresse →</span>
+      </a>
+      <a class="mode reveal reveal-d1" href="affaire-saint-ouen.html">
+        <div class="mode__ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21c5-5 7-8.6 7-12a7 7 0 1 0-14 0c0 3.4 2 7 7 12Z"/><circle cx="12" cy="9" r="2.4"/></svg></div>
+        <h3 data-fr="L'affaire Saint-Ouen" data-en="The Saint-Ouen affair">L'affaire Saint-Ouen</h3>
+        <p data-fr="Le récit en défilé : chronologie, prix, et le débat pour / objections — à parts égales." data-en="A scrollytelling story: timeline, prices, and the for / against debate — equal weight.">Le récit en défilé : chronologie, prix, et le débat pour / objections — à parts égales.</p>
+        <span class="mode__go" data-fr="Lire l'affaire →" data-en="Read the story →">Lire l'affaire →</span>
+      </a>
+      <a class="mode reveal reveal-d2" href="explorer.html">
+        <div class="mode__ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 3 6 2 6-2v16l-6 2-6-2-6 2V5Z"/><path d="M9 3v16M15 5v16"/></svg></div>
+        <h3 data-fr="Explorer la carte" data-en="Explore the map">Explorer la carte</h3>
+        <p data-fr="Prix au m², densité de fast-foods, enseignes-cibles, délinquance communale. Activez les couches." data-en="Price/m², fast-food density, target outlets, commune crime. Toggle the layers.">Prix au m², densité de fast-foods, enseignes-cibles, délinquance communale. Activez les couches.</p>
+        <span class="mode__go" data-fr="Ouvrir la carte →" data-en="Open the map →">Ouvrir la carte →</span>
+      </a>
+      <a class="mode reveal reveal-d2" href="explorer.html#comparer">
+        <div class="mode__ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v18"/><path d="M5 8 3 12h4Z"/><path d="m19 8-2 4h4Z"/><path d="M3 12c0 1.7 1 3 2 3s2-1.3 2-3M17 12c0 1.7 1 3 2 3s2-1.3 2-3"/></svg></div>
+        <h3 data-fr="Comparer deux quartiers" data-en="Compare two areas">Comparer deux quartiers</h3>
+        <p data-fr="Deux communes côte à côte : prix, restauration rapide, contexte de délinquance — et un résultat partageable." data-en="Two communes side by side: price, fast food, crime context — and a shareable result.">Deux communes côte à côte : prix, restauration rapide, contexte de délinquance — et un résultat partageable.</p>
+        <span class="mode__go" data-fr="Comparer →" data-en="Compare →">Comparer →</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== NEUTRALITY ===================== -->
+<section class="section" style="padding-top:0">
+  <div class="wrap">
+    <div class="neutral reveal">
+      <svg class="neutral__scale" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 3v18M7 21h10M5 7l7-2 7 2"/><path d="M5 7 2 13a3 3 0 0 0 6 0Z"/><path d="m19 7 3 6a3 3 0 0 1-6 0Z"/></svg>
+      <div>
+        <h3 style="font-family:var(--font-sans);font-size:1.1rem;font-weight:700" data-fr="Un observatoire neutre, par construction." data-en="A neutral observatory, by design.">Un observatoire neutre, par construction.</h3>
+        <p data-fr="Cet observatoire n'est affilié à aucune enseigne ni à aucun élu. Un dossier de soutien à Master Poulet a servi de matière première : il est cité uniquement comme la position d'une partie, jamais comme la voix du site." data-en="This observatory is affiliated with no chain and no politician. A pro-chain dossier was used as raw material: it is cited only as one party's position, never as the site's voice.">Cet observatoire n'est affilié à aucune enseigne ni à aucun élu. Un dossier de soutien à Master Poulet a servi de matière première : il est cité <b>uniquement comme la position d'une partie</b>, jamais comme la voix du site.</p>
+      </div>
+    </div>
+  </div>
+</section>
+</main>
+
+<!-- ===================== FOOTER ===================== -->
+<footer class="footer">
+  <div class="wrap footer__in">
+    <div>
+      <a class="brand" href="index.html" style="margin-bottom:.8rem">
+        <svg width="26" height="26" viewBox="0 0 32 32" aria-hidden="true"><path d="M16 2C10.5 2 6 6.4 6 11.9c0 7.2 8.4 16.5 9.2 17.4a1.1 1.1 0 0 0 1.6 0c.8-.9 9.2-10.2 9.2-17.4C26 6.4 21.5 2 16 2Z" fill="var(--accent)"/><circle cx="16" cy="12" r="4.4" fill="var(--surface-2)"/></svg>
+        <span class="brand__name" style="font-size:1rem">Observatoire <span class="amp">&</span> Quartiers</span>
+      </a>
+      <p data-fr="Les données ouvertes, l'avis libre. Observatoire indépendant — non affilié à une enseigne." data-en="Open data, your own opinion. Independent observatory — affiliated with no chain.">Les données ouvertes, l'avis libre. Observatoire indépendant — non affilié à une enseigne.</p>
+    </div>
+    <div>
+      <h4>Explorer</h4>
+      <a href="affaire-saint-ouen.html" data-fr="L'affaire Saint-Ouen" data-en="The Saint-Ouen affair">L'affaire Saint-Ouen</a>
+      <a href="explorer.html" data-fr="Explorer la carte" data-en="Explore the map">Explorer la carte</a>
+      <a href="systeme.html" data-fr="Système de design" data-en="Design system">Système de design</a>
+    </div>
+    <div>
+      <h4>Données</h4>
+      <a href="systeme.html">DVF · Etalab / DGFiP</a>
+      <a href="systeme.html">OpenStreetMap · ODbL</a>
+      <a href="systeme.html">SSMSI · INSEE · IGN</a>
+    </div>
+  </div>
+  <div class="wrap" style="padding-bottom:2rem">
+    <p class="source">Réutilisation sous Licence Ouverte / Etalab 2.0 (OSM : ODbL). <a href="systeme.html" data-fr="Méthodes & limites" data-en="Methods & limits">Méthodes &amp; limites</a> · <a href="systeme.html">Sources</a>.</p>
+  </div>
+</footer>
+
+<script src="assets/site.js"></script>
+<script>
+  /* KPI data — shapes mirror src/data/summary.json from the live pipeline. */
+  const KPIS = [
+    { v:"6 399", u:"€/m²", lf:"Prix médian à Saint-Ouen (2024)", le:"Median price in Saint-Ouen (2024)", lvl:"doc", span:false,
+      src:"DVF géolocalisé — Etalab / DGFiP · Licence Ouverte 2.0" },
+    { v:"−9", u:"%", lf:"Évolution du prix à Saint-Ouen (2021→2024)", le:"Price change in Saint-Ouen (2021→2024)", lvl:"doc", span:false,
+      src:"DVF géolocalisé — Etalab / DGFiP · Licence Ouverte 2.0" },
+    { v:"4 999", u:"", lf:"Points de restauration rapide recensés (Grand Paris)", le:"Fast-food points mapped (Greater Paris)", lvl:"doc", span:false,
+      caveat:"Comptage OpenStreetMap, non exhaustif", src:"OpenStreetMap — Contributeurs OSM · ODbL 1.0" },
+    { v:"64", u:"", lf:"Enseignes-cibles poulet / crousti localisées", le:"Target chicken / crousti outlets located", lvl:"eme", span:false,
+      caveat:"Couverture partielle (OSM + référence)", src:"OpenStreetMap + liste de référence · ODbL 1.0" },
+    { v:"110,3", u:"/1000 hab", lf:"Délinquance enregistrée à Saint-Ouen (2024, toutes catégories)", le:"Recorded crime in Saint-Ouen (2024, all categories)", lvl:"doc", span:false,
+      caveat:"Niveau communal — ne décrit pas un quartier (sophisme écologique)", src:"SSMSI — Ministère de l'Intérieur · base communale" },
+    { v:"55", u:"%", lf:"Français approuvant l'action du maire (Ifop, mai 2026)", le:"French approving the mayor's action (Ifop, May 2026)", lvl:"doc", span:false,
+      src:"Sondage Ifop, mai 2026" },
+    { v:"393 015", u:"", lf:"Fast-foods recensés en France (SIRENE, NAF 56.10C)", le:"Fast-food shops on record in France (SIRENE, NAF 56.10C)", lvl:"doc", span:false,
+      caveat:"Dont 233 152 déjà fermés — rotation normale des petits commerces", src:"SIRENE — INSEE · base nationale des établissements" },
+    { v:"91,6", u:"%", lf:"Fast-foods encore ouverts après 5 ans (France)", le:"Fast-food shops still open after 5 years (France)", lvl:"doc", span:false,
+      caveat:"Survie discrète style Kaplan-Meier — descriptif, non causal", src:"SIRENE — INSEE · survie nationale" }
+  ];
+  const GLYPH = { doc:"✓", eme:"~", con:"!" }, LVLNAME = { doc:"documenté", eme:"émergent", con:"contesté" };
+  const lang = localStorage.getItem('pq-lang') || 'fr';
+  const grid = document.getElementById('kpiGrid');
+  KPIS.forEach((k, i) => {
+    const el = document.createElement('div');
+    el.className = 'card kpi reveal' + (i % 4 ? ' reveal-d' + (i % 4) : '') + (k.span ? ' span2' : '');
+    el.innerHTML = `
+      <div class="kpi__v">${k.v}${k.u ? `<span class="u">${k.u}</span>` : ''}</div>
+      <div class="kpi__l" data-fr="${k.lf}" data-en="${k.le}">${k.lf}</div>
+      ${k.caveat ? `<div class="kpi__caveat"><span aria-hidden="true">⚠</span><span>${k.caveat}</span></div>` : ''}
+      <div class="kpi__foot">
+        <span class="badge badge--${k.lvl}"><span class="g">${GLYPH[k.lvl]}</span>${LVLNAME[k.lvl]}</span>
+        <button class="kpi__src-btn" aria-expanded="false"><span>source</span><span aria-hidden="true">ⓘ</span></button>
+      </div>
+      <div class="kpi__src source">${k.src}</div>`;
+    grid.appendChild(el);
+  });
+
+  /* Re-run reveal observer now that KPI cards exist */
+  if (window.PQ && window.PQ.refreshReveal) window.PQ.refreshReveal();
+
+  /* Hero parallax — gentle, disabled for reduced-motion */
+  const heroImg = document.getElementById('heroImg');
+  if (heroImg && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    let ticking = false;
+    addEventListener('scroll', () => {
+      if (ticking) return; ticking = true;
+      requestAnimationFrame(() => {
+        const y = Math.min(window.scrollY, 700);
+        heroImg.style.transform = 'translateY(' + (y * 0.08) + 'px) scale(1.04)';
+        ticking = false;
+      });
+    }, { passive: true });
+  }
+</script>
+</body>
+</html>

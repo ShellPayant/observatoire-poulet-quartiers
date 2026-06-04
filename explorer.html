@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="fr" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Explorer le Grand Paris — Observatoire Poulet & Quartiers</title>
+<meta name="description" content="Carte interactive du Grand Paris : prix au m², densité de restauration rapide, enseignes-cibles, délinquance communale. Une superposition n'est pas une preuve.">
+<link rel="stylesheet" href="assets/tokens.css">
+<style>
+  body { overflow-x: hidden; }
+  .xp { display: grid; grid-template-columns: 320px 1fr; gap: 0; min-height: calc(100vh - 64px); }
+
+  /* ---------- Controls rail ---------- */
+  .rail { border-right: 1px solid var(--line); padding: 1.5rem; display: flex; flex-direction: column; gap: 1.4rem; background: var(--surface); }
+  .rail h1 { font-size: 1.5rem; line-height: 1.2; margin-bottom: 1.05rem; }
+  .rail .lead { font-size: var(--t-sm); color: var(--ink-2); margin: 0; }
+  .field { display: flex; flex-direction: column; gap: .55rem; }
+  .field > .lbl { font-family: var(--font-mono); font-size: var(--t-mono); letter-spacing: .1em; text-transform: uppercase; color: var(--ink-3); }
+
+  /* Segmented layer switcher */
+  .seg { display: flex; flex-direction: column; gap: .4rem; }
+  .seg__btn {
+    display: flex; align-items: center; gap: .7rem; text-align: left; cursor: pointer;
+    border: 1px solid var(--line); background: var(--surface); border-radius: var(--r-md);
+    padding: .7rem .8rem; font: inherit; color: var(--ink); transition: .15s; min-height: 44px;
+  }
+  .seg__btn:hover { border-color: var(--line-2); background: var(--surface-2); }
+  .seg__btn[aria-pressed="true"] { border-color: var(--accent); background: var(--accent-tint); box-shadow: inset 0 0 0 1px var(--accent); }
+  .seg__sw { width: 26px; height: 26px; border-radius: 7px; flex: none; background: linear-gradient(135deg, var(--c0), var(--c4)); }
+  .seg__btn .tx { display: flex; flex-direction: column; line-height: 1.2; }
+  .seg__btn .tx b { font-weight: 600; font-size: .92rem; }
+  .seg__btn .tx span { font-family: var(--font-mono); font-size: var(--t-mono); color: var(--ink-3); }
+  .seg__btn .lk { margin-left: auto; }
+
+  /* Toggle rows */
+  .tg { display: flex; align-items: center; gap: .7rem; cursor: pointer; padding: .5rem 0; min-height: 44px; }
+  .tg input { position: absolute; opacity: 0; pointer-events: none; }
+  .tg__box { width: 42px; height: 24px; border-radius: 999px; background: var(--surface-3); border: 1px solid var(--line-2); position: relative; transition: .18s; flex: none; }
+  .tg__box::after { content: ""; position: absolute; top: 2px; left: 2px; width: 18px; height: 18px; border-radius: 50%; background: var(--surface); box-shadow: var(--shadow-1); transition: .18s; }
+  .tg input:checked + .tg__box { background: var(--accent); border-color: var(--accent); }
+  .tg input:checked + .tg__box::after { transform: translateX(18px); }
+  .tg input:focus-visible + .tg__box { box-shadow: var(--focus); }
+  .tg__dot { width: 11px; height: 11px; border-radius: 50%; flex: none; }
+  .tg .tx { font-size: .9rem; line-height: 1.25; }
+  .tg .tx span { font-family: var(--font-mono); font-size: var(--t-mono); color: var(--ink-3); display: block; }
+
+  .rail .note { font-family: var(--font-mono); font-size: var(--t-mono); color: var(--ink-3); line-height: 1.5; border-top: 1px solid var(--line); padding-top: 1rem; }
+  .rail .badge-row { display: flex; align-items: center; gap: .5rem; flex-wrap: wrap; }
+
+  /* ---------- Map stage ---------- */
+  .stage { position: relative; background: var(--surface-2); overflow: hidden; min-height: calc(100vh - 64px); }
+  .map { position: absolute; inset: 0; }
+  .seine { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; opacity: .5; }
+  .tile {
+    position: absolute; border-radius: 6px; cursor: pointer; transition: background-color .45s ease, transform .15s ease, box-shadow .15s ease, outline-color .15s;
+    outline: 2px solid transparent; outline-offset: 1px;
+  }
+  .tile:hover { transform: scale(1.12); z-index: 5; box-shadow: var(--shadow-2); outline-color: var(--ink); }
+  .tile.sel { outline-color: var(--accent); z-index: 6; box-shadow: 0 0 0 3px var(--accent-soft), var(--shadow-2); }
+  .tile.flash { animation: flash 1.4s ease; }
+  @keyframes flash { 0%,100%{ outline-color: transparent; } 30%,60%{ outline-color: var(--accent); transform: scale(1.25); } }
+  .pt { position: absolute; border-radius: 50%; pointer-events: none; transition: opacity .25s; }
+  .pt--cible { background: var(--accent); box-shadow: 0 0 0 1.5px var(--surface); width: 9px; height: 9px; pointer-events: auto; cursor: pointer; }
+  .pt--fast { background: var(--ink-3); width: 4px; height: 4px; opacity: .55; }
+
+  /* Orientation aids */
+  .zone-label { position: absolute; z-index: 1; font-family: var(--font-display); font-weight: 600; color: var(--ink); opacity: .1; letter-spacing: .04em; pointer-events: none; transform: translate(-50%, -50%); white-space: nowrap; text-transform: uppercase; }
+  .tile-label { position: absolute; z-index: 4; font-family: var(--font-mono); font-size: 10px; color: var(--ink); pointer-events: none; transform: translate(-50%, 0); white-space: nowrap; font-weight: 600; text-shadow: 0 0 3px var(--paper), 0 1px 2px var(--paper), 0 0 6px var(--paper); }
+  .tile.focus { outline-color: var(--accent) !important; box-shadow: 0 0 0 4px var(--accent-soft), var(--shadow-2) !important; z-index: 6; }
+  .focus-pin { position: absolute; z-index: 7; transform: translate(-50%, -100%); pointer-events: none; display: flex; flex-direction: column; align-items: center; gap: 2px; }
+  .focus-pin .lab { background: var(--ink); color: var(--paper); font-family: var(--font-mono); font-size: 10px; font-weight: 600; padding: .22rem .55rem; border-radius: var(--r-pill); white-space: nowrap; box-shadow: var(--shadow-2); }
+  .focus-pin .stem { width: 1px; height: 9px; background: var(--ink); }
+  .compass { position: absolute; top: 14px; right: 14px; z-index: 7; width: 40px; height: 40px; border-radius: 50%; background: color-mix(in srgb, var(--surface) 90%, transparent); backdrop-filter: blur(6px); border: 1px solid var(--line); display: grid; place-items: center; box-shadow: var(--shadow-1); }
+  .compass .n { font-family: var(--font-mono); font-size: 11px; font-weight: 700; color: var(--accent-strong); line-height: 1; }
+  .compass .ar { font-size: 9px; color: var(--ink-3); line-height: 1; }
+
+  /* Legend qualitative ends */
+  .legend__ends { display: flex; justify-content: space-between; font-family: var(--font-mono); font-size: 10px; color: var(--ink-2); font-weight: 600; margin-bottom: .15rem; }
+  .legend__hint { font-family: var(--font-mono); font-size: 10px; color: var(--ink-3); margin-top: .4rem; display: flex; align-items: center; gap: .35rem; }
+
+  /* Search */
+  .search { position: absolute; top: 14px; left: 14px; z-index: 8; width: min(330px, calc(100% - 28px)); }
+  .search__in { display: flex; align-items: center; gap: .5rem; background: var(--surface); border: 1px solid var(--line-2); border-radius: var(--r-pill); padding: .15rem .15rem .15rem .9rem; box-shadow: var(--shadow-2); }
+  .search__in svg { color: var(--ink-3); flex: none; }
+  .search__in input { border: 0; background: none; flex: 1; font: inherit; font-size: var(--t-sm); color: var(--ink); padding: .55rem 0; outline: none; min-width: 0; }
+  .search__in button { border: 0; background: var(--accent); color: var(--on-accent); border-radius: var(--r-pill); width: 36px; height: 36px; cursor: pointer; flex: none; display: grid; place-items: center; }
+  .search__res { margin-top: .4rem; background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-md); box-shadow: var(--shadow-2); overflow: hidden; display: none; }
+  .search__res.open { display: block; }
+  .search__res button { display: flex; width: 100%; justify-content: space-between; gap: 1rem; align-items: center; border: 0; background: none; padding: .6rem .8rem; cursor: pointer; font: inherit; font-size: var(--t-sm); color: var(--ink); text-align: left; }
+  .search__res button:hover { background: var(--accent-tint); }
+  .search__res button .m { font-family: var(--font-mono); font-size: var(--t-mono); color: var(--ink-3); }
+
+  /* Floating legend */
+  .legend { position: absolute; bottom: 14px; left: 14px; z-index: 7; background: color-mix(in srgb, var(--surface) 92%, transparent); backdrop-filter: blur(8px); border: 1px solid var(--line); border-radius: var(--r-md); padding: .75rem .85rem; box-shadow: var(--shadow-2); max-width: 230px; }
+  .legend__t { font-family: var(--font-mono); font-size: var(--t-mono); letter-spacing: .04em; color: var(--ink-2); margin-bottom: .5rem; font-weight: 600; }
+  .legend__scale { display: flex; height: 12px; border-radius: 3px; overflow: hidden; margin-bottom: .35rem; }
+  .legend__scale i { flex: 1; }
+  .legend__ax { display: flex; justify-content: space-between; font-family: var(--font-mono); font-size: 10px; color: var(--ink-3); }
+  .legend__nd { display: flex; align-items: center; gap: .4rem; margin-top: .5rem; font-family: var(--font-mono); font-size: 10px; color: var(--ink-3); }
+  .legend__nd i { width: 12px; height: 12px; border-radius: 3px; background: var(--nodata); border: 1px solid var(--line-2); }
+
+  /* Attribution */
+  .attrib { position: absolute; bottom: 6px; right: 8px; z-index: 7; font-family: var(--font-mono); font-size: 9px; color: var(--ink-3); background: color-mix(in srgb, var(--surface) 70%, transparent); padding: .15rem .45rem; border-radius: 4px; }
+
+  /* Tooltip */
+  .tip { position: fixed; z-index: 60; pointer-events: none; background: var(--ink); color: var(--paper); font-size: var(--t-xs); padding: .4rem .6rem; border-radius: var(--r-sm); box-shadow: var(--shadow-2); transform: translate(-50%, -130%); white-space: nowrap; opacity: 0; transition: opacity .12s; }
+  .tip b { font-weight: 600; }
+  .tip .v { font-family: var(--font-mono); color: var(--accent-deep); }
+
+  /* Popup */
+  .popup { position: absolute; z-index: 9; width: 250px; background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-md); box-shadow: var(--shadow-3); padding: 1rem 1.05rem; transform: translate(-50%, calc(-100% - 16px)); display: none; }
+  .popup.open { display: block; }
+  .popup__x { position: absolute; top: .5rem; right: .5rem; border: 0; background: none; cursor: pointer; color: var(--ink-3); font-size: 1rem; line-height: 1; padding: .2rem; }
+  .popup h4 { font-family: var(--font-sans); font-size: 1.02rem; font-weight: 700; margin: 0 .5rem .6rem 0; }
+  .popup__row { display: flex; justify-content: space-between; gap: 1rem; padding: .35rem 0; border-top: 1px dashed var(--line); font-size: var(--t-sm); }
+  .popup__row .k { color: var(--ink-2); }
+  .popup__row .v { font-family: var(--font-mono); font-weight: 600; }
+  .popup__row .v.muted { color: var(--ink-3); font-weight: 400; }
+  .popup__cta { display: inline-flex; margin-top: .7rem; font-family: var(--font-mono); font-size: var(--t-mono); color: var(--accent-strong); text-decoration: none; font-weight: 600; }
+  .popup::after { content: ""; position: absolute; left: 50%; bottom: -8px; width: 14px; height: 14px; background: var(--surface); border-right: 1px solid var(--line); border-bottom: 1px solid var(--line); transform: translateX(-50%) rotate(45deg); }
+  .popup.below::after { bottom: auto; top: -8px; border-right: 0; border-bottom: 0; border-left: 1px solid var(--line); border-top: 1px solid var(--line); }
+
+  /* Crime gate */
+  .gate { position: absolute; inset: 0; z-index: 20; display: none; align-items: center; justify-content: center; padding: 1.5rem; background: color-mix(in srgb, var(--paper) 72%, transparent); backdrop-filter: blur(5px); }
+  .gate.open { display: flex; }
+  .gate__card { max-width: 440px; background: var(--surface); border: 1px solid var(--con-line); border-top: 5px solid var(--con); border-radius: var(--r-lg); padding: 1.6rem; box-shadow: var(--shadow-3); }
+  .gate__ic { width: 46px; height: 46px; border-radius: 50%; background: var(--con-soft); color: var(--con); display: grid; place-items: center; font-size: 1.4rem; font-weight: 700; margin-bottom: 1rem; }
+  .gate__card h3 { font-family: var(--font-sans); font-size: 1.2rem; font-weight: 700; margin-bottom: .6rem; }
+  .gate__card p { font-size: var(--t-sm); color: var(--ink-2); margin: 0 0 .7rem; }
+  .gate__card .em { color: var(--ink); font-weight: 600; }
+  .gate__acts { display: flex; gap: .6rem; flex-wrap: wrap; margin-top: 1.1rem; }
+
+  /* Loading shimmer */
+  .loading { position: absolute; inset: 0; z-index: 15; display: grid; place-items: center; background: var(--surface-2); transition: opacity .4s; }
+  .loading.hide { opacity: 0; pointer-events: none; }
+  .spin { width: 34px; height: 34px; border-radius: 50%; border: 3px solid var(--line-2); border-top-color: var(--accent); animation: spin 1s linear infinite; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* Mobile drawer trigger */
+  .drawer-btn { display: none; }
+
+  /* Honest-reading band below */
+  .honest { border-top: 1px solid var(--line); background: var(--surface); }
+  .honest__grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 1.2rem; margin-top: 1.3rem; }
+  .honest__grid .it { border-left: 3px solid var(--accent); padding-left: 1rem; }
+  .honest__grid .it b { display: block; margin-bottom: .25rem; }
+  .honest__grid .it p { font-size: var(--t-sm); color: var(--ink-2); margin: 0; }
+
+  @media (max-width: 900px) {
+    .xp { grid-template-columns: 1fr; }
+    .rail {
+      position: fixed; inset: auto 0 0 0; z-index: 40; border-right: 0; border-top: 1px solid var(--line);
+      border-radius: var(--r-xl) var(--r-xl) 0 0; box-shadow: var(--shadow-3); max-height: 78vh; overflow-y: auto;
+      transform: translateY(calc(100% - 0px)); transition: transform .3s ease; padding-top: 1rem;
+    }
+    .rail.open { transform: translateY(0); }
+    .rail::before { content: ""; position: absolute; top: .5rem; left: 50%; transform: translateX(-50%); width: 40px; height: 4px; border-radius: 2px; background: var(--line-2); }
+    .stage { min-height: 64vh; }
+    .drawer-btn {
+      display: inline-flex; align-items: center; gap: .5rem; position: fixed; bottom: 18px; left: 50%; transform: translateX(-50%);
+      z-index: 45; box-shadow: var(--shadow-3);
+    }
+    .honest__grid { grid-template-columns: 1fr; }
+    .legend { max-width: 180px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ===================== NAV ===================== -->
+<header class="nav">
+  <div class="wrap nav__in">
+    <a class="brand" href="index.html" aria-label="Accueil">
+      <svg width="30" height="30" viewBox="0 0 32 32" aria-hidden="true"><path d="M16 2C10.5 2 6 6.4 6 11.9c0 7.2 8.4 16.5 9.2 17.4a1.1 1.1 0 0 0 1.6 0c.8-.9 9.2-10.2 9.2-17.4C26 6.4 21.5 2 16 2Z" fill="var(--accent)"/><circle cx="16" cy="12" r="4.4" fill="var(--paper)"/></svg>
+      <span class="brand__name">Observatoire <span class="amp">&</span> Quartiers</span>
+    </a>
+    <button class="icon-btn nav__burger" aria-label="Menu" aria-expanded="false" aria-controls="nav-links">☰</button>
+    <nav class="nav__links" id="nav-links" aria-label="Navigation principale">
+      <a class="nav__link" href="mon-quartier.html" data-fr="Mon quartier" data-en="My neighborhood">Mon quartier</a>
+      <a class="nav__link" href="affaire-saint-ouen.html" data-fr="L'affaire Saint-Ouen" data-en="The Saint-Ouen affair">L'affaire Saint-Ouen</a>
+      <a class="nav__link" href="explorer.html" aria-current="page" data-fr="Explorer la carte" data-en="Explore the map">Explorer la carte</a>
+      <a class="nav__link" href="#comparer" data-fr="Comparer" data-en="Compare">Comparer</a>
+      <a class="nav__link" href="systeme.html" data-fr="Méthodes" data-en="Methods">Méthodes</a>
+      <a class="nav__link" href="systeme.html" data-fr="Sources" data-en="Sources">Sources</a>
+    </nav>
+    <div class="nav__tools">
+      <div class="lang" role="group" aria-label="Langue"><button data-lang="fr" aria-pressed="true">FR</button><button data-lang="en" aria-pressed="false">EN</button></div>
+      <button class="icon-btn" data-theme-toggle aria-label="Thème">☾</button>
+    </div>
+  </div>
+</header>
+
+<!-- ===================== EXPLORER ===================== -->
+<div class="xp">
+  <!-- Controls -->
+  <aside class="rail" id="rail" aria-label="Contrôles de la carte">
+    <div>
+      <h1 data-fr="Explorer le Grand Paris" data-en="Explore Greater Paris">Explorer le Grand Paris</h1>
+      <p class="lead" style="margin-top:.5rem" data-fr="Activez une couche, survolez ou cliquez une commune. Une superposition n'est pas une preuve : ces cartes sont descriptives." data-en="Toggle a layer, hover or click a commune. An overlay is not proof: these maps are descriptive.">Activez une couche, survolez ou cliquez une commune. <b>Une superposition n'est pas une preuve</b> : ces cartes sont descriptives.</p>
+    </div>
+
+    <div class="field">
+      <span class="lbl" data-fr="Couche colorée" data-en="Color layer">Couche colorée</span>
+      <div class="seg" id="seg" role="group" aria-label="Couche colorée"></div>
+    </div>
+
+    <div class="field">
+      <span class="lbl" data-fr="Points sur la carte" data-en="Points on the map">Points sur la carte</span>
+      <label class="tg">
+        <input type="checkbox" id="tgCibles" checked>
+        <span class="tg__box"></span>
+        <span class="tg__dot" style="background:var(--accent)"></span>
+        <span class="tx" data-fr="Enseignes-cibles poulet / crousti" data-en="Target chicken / crousti outlets">Enseignes-cibles poulet / crousti<span>64 points · OSM + référence</span></span>
+      </label>
+      <label class="tg">
+        <input type="checkbox" id="tgFast">
+        <span class="tg__box"></span>
+        <span class="tg__dot" style="background:var(--ink-3)"></span>
+        <span class="tx" data-fr="Toute la restauration rapide" data-en="All fast food">Toute la restauration rapide<span>4 999 points · OSM</span></span>
+      </label>
+    </div>
+
+    <div class="note">
+      <div class="badge-row" id="layerMeta"></div>
+      <p style="margin:.7rem 0 0" data-fr="Couches — Prix : DVF. Densité : OSM ÷ population INSEE (indicatif). Délinquance : SSMSI, communal. Fond schématique. Démo : valeurs illustratives — réelles pour Saint-Ouen et les repères ; en production, chaque case lit src/data/*.json." data-en="Layers — Price: DVF. Density: OSM ÷ INSEE population (indicative). Crime: SSMSI, commune-level. Schematic basemap. Demo: illustrative values — real for Saint-Ouen and the benchmarks; in production every tile reads src/data/*.json.">Couches — Prix : DVF. Densité : OSM ÷ population INSEE (indicatif). Délinquance : SSMSI, communal. Fond schématique. Démo : valeurs illustratives — réelles pour Saint-Ouen et les repères ; en production, chaque case lit src/data/*.json.</p>
+    </div>
+  </aside>
+
+  <!-- Map -->
+  <div class="stage" id="stage">
+    <div class="search">
+      <form class="search__in" id="searchForm" role="search">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+        <input id="searchInput" placeholder="Chercher une commune…" autocomplete="off" aria-label="Chercher une commune">
+        <button type="submit" aria-label="Rechercher"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
+      </form>
+      <div class="search__res" id="searchRes"></div>
+    </div>
+
+    <div class="map" id="map">
+      <svg class="seine" viewBox="0 0 1000 700" preserveAspectRatio="none" aria-hidden="true">
+        <path d="M -20 250 C 180 230 280 360 430 350 C 560 342 640 250 760 270 C 860 286 940 360 1040 330" fill="none" stroke="var(--crim-1)" stroke-width="16" stroke-linecap="round" opacity=".7"/>
+      </svg>
+    </div>
+
+    <div class="legend" id="legend" aria-hidden="false"></div>
+    <div class="compass" aria-hidden="true"><div><div class="n">N</div><div class="ar">▲</div></div></div>
+    <div class="attrib" data-fr="Fond schématique — production : MapLibre GL + © IGN Géoplateforme" data-en="Schematic basemap — production: MapLibre GL + © IGN Géoplateforme">Fond schématique — production : MapLibre GL + © IGN Géoplateforme</div>
+
+    <div class="popup" id="popup" role="dialog" aria-label="Détail commune"></div>
+
+    <!-- Crime gate -->
+    <div class="gate" id="gate" role="alertdialog" aria-modal="true" aria-labelledby="gateTitle">
+      <div class="gate__card">
+        <div class="gate__ic">⚠</div>
+        <h3 id="gateTitle" data-fr="Donnée sensible — à lire avec précaution" data-en="Sensitive data — read with care">Donnée sensible — à lire avec précaution</h3>
+        <p data-fr="La délinquance n'est disponible qu'au niveau communal. Elle décrit une commune entière — jamais un quartier, un commerce ou une population." data-en="Crime is only available at commune level. It describes a whole commune — never a neighborhood, a business, or a population.">La délinquance n'est disponible qu'au niveau <span class="em">communal</span>. Elle décrit une commune entière — <span class="em">jamais</span> un quartier, un commerce ou une population.</p>
+        <p data-fr="Établir un lien avec un restaurant relèverait du sophisme écologique. Nous l'affichons comme contexte, jamais comme cause." data-en="Linking it to a restaurant would be an ecological fallacy. We show it as context, never as cause.">Établir un lien avec un restaurant relèverait du <span class="em">sophisme écologique</span>. Nous l'affichons comme contexte, jamais comme cause.</p>
+        <div class="gate__acts">
+          <button class="btn btn--primary" id="gateOk" style="background:var(--con)" data-fr="J'ai compris, afficher la couche" data-en="I understand, show the layer">J'ai compris, afficher la couche</button>
+          <button class="btn btn--ghost" id="gateCancel" data-fr="Revenir aux prix" data-en="Back to prices">Revenir aux prix</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="loading" id="loading"><div class="spin" role="status" aria-label="Chargement de la carte"></div></div>
+  </div>
+</div>
+
+<button class="btn btn--primary drawer-btn" id="drawerBtn" aria-controls="rail" aria-expanded="false">
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+  <span data-fr="Couches & options" data-en="Layers & options">Couches & options</span>
+</button>
+
+<div class="tip" id="tip"></div>
+
+<!-- Honest reading -->
+<section class="honest">
+  <div class="wrap" style="padding-block:2.5rem">
+    <span class="eyebrow" data-fr="Lire ces cartes honnêtement" data-en="Reading these maps honestly">Lire ces cartes honnêtement</span>
+    <div class="honest__grid">
+      <div class="it"><b data-fr="Le prix" data-en="Price">Le prix</b><p data-fr="dépend d'abord des transports, des projets urbains et du bâti — pas de la restauration." data-en="depends first on transit, urban projects and building stock — not on restaurants.">dépend d'abord des transports, des projets urbains et du bâti — pas de la restauration.</p></div>
+      <div class="it"><b data-fr="La densité de fast-foods" data-en="Fast-food density">La densité de fast-foods</b><p data-fr="marque surtout une offre, pas des comportements ni des effets santé." data-en="mostly marks supply, not behaviors or health effects.">marque surtout une offre, pas des comportements ni des effets santé.</p></div>
+      <div class="it"><b data-fr="La délinquance communale" data-en="Commune crime">La délinquance communale</b><p data-fr="ne se découpe pas en quartiers : c'est un contexte, jamais une cause attribuable à un commerce." data-en="does not break down into neighborhoods: it's context, never a cause attributable to a business.">ne se découpe pas en quartiers : c'est un contexte, jamais une cause attribuable à un commerce.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- Comparer teaser -->
+<section class="honest" id="comparer" style="border-top:1px solid var(--line);background:var(--surface-2)">
+  <div class="wrap" style="padding-block:2.5rem">
+    <span class="eyebrow" data-fr="Comparer deux quartiers" data-en="Compare two areas">Comparer deux quartiers</span>
+    <h2 style="margin:.5rem 0 1.6rem;max-width:24ch" data-fr="Mettez deux communes côte à côte — et partagez le résultat." data-en="Put two communes side by side — and share the result.">Mettez deux communes côte à côte — et partagez le résultat.</h2>
+    <div id="cmp" style="display:grid;grid-template-columns:1fr auto 1fr;gap:1rem;align-items:stretch;max-width:760px"></div>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="wrap" style="padding-block:1.6rem"><p class="source">Réutilisation sous Licence Ouverte / Etalab 2.0 (OSM : ODbL). Observatoire indépendant. <a href="systeme.html" data-fr="Méthodes & limites" data-en="Methods & limits">Méthodes &amp; limites</a> · <a href="index.html" data-fr="Accueil" data-en="Home">Accueil</a>.</p></div>
+</footer>
+
+<script src="assets/site.js"></script>
+<script src="assets/explorer.js?v=7"></script>
+</body>
+</html>

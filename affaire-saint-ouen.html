@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="fr" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>L'affaire Master Poulet de Saint-Ouen — Observatoire Poulet & Quartiers</title>
+<meta name="description" content="Le récit en défilé de la « guerre du poulet » de Saint-Ouen : chronologie, prix de l'immobilier, et le débat pour / objections — chaque argument étiqueté par son niveau de preuve.">
+<link rel="stylesheet" href="assets/tokens.css">
+<style>
+  /* ---------- Case hero ---------- */
+  .chero { position: relative; overflow: hidden; }
+  .chero__img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center 35%; }
+  .chero__scrim { position: absolute; inset: 0; background: linear-gradient(105deg, rgba(20,14,6,.86) 0%, rgba(20,14,6,.6) 42%, rgba(20,14,6,.18) 100%); }
+  .chero__in { position: relative; padding-block: clamp(3rem, 9vw, 7rem); }
+  .chero .eyebrow { color: var(--gold); }
+  .chero h1 { color: #FBF5E9; font-size: clamp(2.2rem, 1.3rem + 3.4vw, 4rem); font-weight: 500; max-width: 17ch; line-height: 1.06; margin-top: 1rem; }
+  .chero p { color: rgba(251,245,233,.82); max-width: 46ch; margin-top: 1.2rem; font-size: 1.12rem; }
+  .chero__meta { display: flex; gap: 1.4rem; flex-wrap: wrap; margin-top: 1.6rem; }
+  .chero__meta span { font-family: var(--font-mono); font-size: var(--t-mono); color: rgba(251,245,233,.7); letter-spacing: .05em; display: inline-flex; gap: .4rem; align-items: center; }
+  .chero__meta b { color: var(--gold); }
+
+  /* ---------- Scrollytelling ---------- */
+  .scrolly { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(1.5rem, 5vw, 4rem); align-items: start; }
+  .scrolly__figure { position: sticky; top: 88px; height: min(78vh, 620px); }
+  .figpanel { height: 100%; border-radius: var(--r-lg); border: 1px solid var(--line); background: var(--surface); box-shadow: var(--shadow-2); padding: 1.4rem 1.5rem; display: flex; flex-direction: column; position: relative; overflow: hidden; }
+  .figpanel__head { display: flex; align-items: center; justify-content: space-between; gap: 1rem; margin-bottom: 1rem; }
+  .figpanel__head .t { font-family: var(--font-mono); font-size: var(--t-mono); letter-spacing: .08em; text-transform: uppercase; color: var(--ink-3); }
+  .figstate { position: absolute; inset: 1.4rem 1.5rem; opacity: 0; transform: translateY(10px); transition: opacity .5s ease, transform .5s ease; pointer-events: none; display: flex; flex-direction: column; }
+  .figstate.on { opacity: 1; transform: none; pointer-events: auto; }
+
+  /* Timeline figure */
+  .tl { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: .1rem; }
+  .tl li { position: relative; padding: .55rem 0 .55rem 2rem; border-left: 2px solid var(--line-2); }
+  .tl li::before { content: ""; position: absolute; left: -7px; top: .8rem; width: 12px; height: 12px; border-radius: 50%; background: var(--surface); border: 2px solid var(--accent); }
+  .tl li.hot::before { background: var(--accent); box-shadow: 0 0 0 4px var(--accent-soft); }
+  .tl .d { font-family: var(--font-mono); font-size: var(--t-mono); color: var(--accent-strong); font-weight: 600; }
+  .tl .e { font-size: var(--t-sm); color: var(--ink); margin-top: .15rem; }
+
+  /* Chart */
+  .chart { flex: 1; width: 100%; }
+  .chart text { font-family: var(--font-mono); }
+  .figcap { font-size: var(--t-xs); color: var(--ink-2); margin-top: .6rem; }
+  .figsrc { font-family: var(--font-mono); font-size: var(--t-mono); color: var(--ink-3); margin-top: .4rem; }
+
+  .steps { display: flex; flex-direction: column; gap: clamp(3rem, 22vh, 9rem); padding: 18vh 0; }
+  .step { }
+  .step h2 { font-size: clamp(1.6rem, 1.2rem + 1.5vw, 2.3rem); font-weight: 500; max-width: 18ch; }
+  .step p { color: var(--ink-2); margin-top: .9rem; font-size: 1.06rem; max-width: 44ch; }
+  .step .num { font-family: var(--font-mono); font-size: var(--t-mono); color: var(--gold-lo); letter-spacing: .1em; }
+  .step .stat { display: inline-flex; align-items: baseline; gap: .5rem; margin-top: 1rem; }
+  .step .stat b { font-family: var(--font-display); font-size: 2.2rem; font-weight: 600; }
+
+  /* mobile: figure shows inline above each step's relevant content */
+  @media (max-width: 880px) {
+    .scrolly { grid-template-columns: 1fr; }
+    .scrolly__figure { position: relative; top: 0; height: 380px; margin-bottom: 1.5rem; order: -1; }
+    .steps { padding: 2rem 0; gap: 3.5rem; }
+  }
+
+  /* ---------- Draw your guess ---------- */
+  .guess { background: var(--surface-2); border-block: 1px solid var(--line); }
+  .guess__grid { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(1.5rem,4vw,3rem); align-items: center; }
+  .guess__svg { width: 100%; touch-action: none; cursor: ns-resize; border-radius: var(--r-md); background: var(--surface); border: 1px solid var(--line); }
+  .guess__read { display: flex; gap: 1.5rem; flex-wrap: wrap; margin: 1rem 0; }
+  .guess__read .b { font-family: var(--font-display); font-size: 1.9rem; font-weight: 600; line-height: 1; }
+  .guess__read .l { font-family: var(--font-mono); font-size: var(--t-mono); color: var(--ink-3); }
+  .guess__reveal { font-size: var(--t-sm); color: var(--ink-2); min-height: 1.4em; }
+  @media (max-width: 880px){ .guess__grid { grid-template-columns: 1fr; } }
+
+  /* ---------- Debate ---------- */
+  .debate__cols { display: grid; grid-template-columns: 1fr 1fr; gap: 1.4rem; margin-top: 1.6rem; }
+  .col__head { display: flex; align-items: center; gap: .6rem; padding-bottom: .8rem; border-bottom: 2px solid; margin-bottom: 1rem; }
+  .col--pro .col__head { border-color: var(--doc); }
+  .col--con .col__head { border-color: var(--con); }
+  .col__head h3 { font-family: var(--font-sans); font-size: 1.15rem; font-weight: 700; }
+  .col__head .ic { width: 30px; height: 30px; border-radius: 50%; display: grid; place-items: center; font-weight: 700; }
+  .col--pro .ic { background: var(--doc-soft); color: var(--doc); }
+  .col--con .ic { background: var(--con-soft); color: var(--con); }
+  .arg { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-md); padding: 1rem 1.1rem; margin-bottom: .9rem; border-left: 3px solid; }
+  .col--pro .arg { border-left-color: var(--doc); }
+  .col--con .arg { border-left-color: var(--con); }
+  .arg p { margin: 0 0 .6rem; font-size: var(--t-sm); }
+  .arg__foot { display: flex; align-items: center; gap: .5rem; flex-wrap: wrap; }
+  @media (max-width: 760px){ .debate__cols { grid-template-columns: 1fr; } }
+
+  .dossier-note { display: flex; gap: 1rem; align-items: flex-start; background: var(--accent-tint); border: 1px solid var(--accent-soft); border-radius: var(--r-md); padding: 1rem 1.2rem; margin-top: 1.4rem; }
+  .dossier-note .ic { color: var(--accent-strong); flex: none; }
+  .dossier-note p { font-size: var(--t-sm); color: var(--ink-2); margin: 0; }
+
+  /* ---------- Not-said ---------- */
+  .notsaid { display: grid; grid-template-columns: repeat(3,1fr); gap: 1.1rem; margin-top: 1.5rem; }
+  .notsaid .it { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-md); padding: 1.2rem; }
+  .notsaid .it .x { width: 28px; height: 28px; border-radius: 50%; background: var(--con-soft); color: var(--con); display: grid; place-items: center; font-weight: 700; margin-bottom: .7rem; }
+  .notsaid .it p { font-size: var(--t-sm); color: var(--ink-2); margin: 0; }
+  @media (max-width: 760px){ .notsaid { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+
+<!-- ===================== NAV ===================== -->
+<header class="nav">
+  <div class="wrap nav__in">
+    <a class="brand" href="index.html" aria-label="Accueil">
+      <svg width="30" height="30" viewBox="0 0 32 32" aria-hidden="true"><path d="M16 2C10.5 2 6 6.4 6 11.9c0 7.2 8.4 16.5 9.2 17.4a1.1 1.1 0 0 0 1.6 0c.8-.9 9.2-10.2 9.2-17.4C26 6.4 21.5 2 16 2Z" fill="var(--accent)"/><circle cx="16" cy="12" r="4.4" fill="var(--paper)"/></svg>
+      <span class="brand__name">Observatoire <span class="amp">&</span> Quartiers</span>
+    </a>
+    <button class="icon-btn nav__burger" aria-label="Menu" aria-expanded="false" aria-controls="nav-links">☰</button>
+    <nav class="nav__links" id="nav-links" aria-label="Navigation principale">
+      <a class="nav__link" href="mon-quartier.html" data-fr="Mon quartier" data-en="My neighborhood">Mon quartier</a>
+      <a class="nav__link" href="affaire-saint-ouen.html" aria-current="page" data-fr="L'affaire Saint-Ouen" data-en="The Saint-Ouen affair">L'affaire Saint-Ouen</a>
+      <a class="nav__link" href="explorer.html" data-fr="Explorer la carte" data-en="Explore the map">Explorer la carte</a>
+      <a class="nav__link" href="explorer.html#comparer" data-fr="Comparer" data-en="Compare">Comparer</a>
+      <a class="nav__link" href="systeme.html" data-fr="Méthodes" data-en="Methods">Méthodes</a>
+      <a class="nav__link" href="systeme.html" data-fr="Sources" data-en="Sources">Sources</a>
+    </nav>
+    <div class="nav__tools">
+      <div class="lang" role="group" aria-label="Langue"><button data-lang="fr" aria-pressed="true">FR</button><button data-lang="en" aria-pressed="false">EN</button></div>
+      <button class="icon-btn" data-theme-toggle aria-label="Thème">☾</button>
+    </div>
+  </div>
+</header>
+
+<main>
+<!-- ===================== HERO ===================== -->
+<section class="chero">
+  <img class="chero__img" src="assets/img/columns.png" alt="Colonnes de marbre cannelées baignées d'une lumière dorée — image d'archive monumentale.">
+  <div class="chero__scrim"></div>
+  <div class="wrap chero__in">
+    <span class="eyebrow" data-fr="Étude de cas · Saint-Ouen-sur-Seine" data-en="Case study · Saint-Ouen-sur-Seine">Étude de cas · Saint-Ouen-sur-Seine</span>
+    <h1 data-fr="L'affaire Master Poulet, en sept actes." data-en="The Master Poulet affair, in seven acts.">L'affaire Master Poulet, en sept actes.</h1>
+    <p data-fr="En avril 2026, un restaurant de poulet braisé à 5 € devient un bras de fer national : blocs de béton, victoire au tribunal, jardinières géantes. Derrière le poulet, un pari foncier — et une question : qui décide de ce qui se vend en bas de chez vous ?" data-en="In April 2026, a €5 braised-chicken shop becomes a national standoff: concrete blocks, a court win, giant flowerpots. Behind the chicken, a real-estate bet — and a question: who decides what gets sold on your street?">En avril 2026, un restaurant de poulet braisé à 5 € devient un bras de fer national : blocs de béton, victoire au tribunal, jardinières géantes. Derrière le poulet, un pari foncier — et une question : <em>qui décide de ce qui se vend en bas de chez vous&nbsp;?</em></p>
+    <div class="chero__meta">
+      <span data-fr="⏱ Lecture défilante · 4 min" data-en="⏱ Scroll story · 4 min">⏱ Lecture défilante · 4 min</span>
+      <span><b>✓</b> <span data-fr="chaque chiffre sourcé" data-en="every figure sourced">chaque chiffre sourcé</span></span>
+      <span data-fr="⚖ pour / objections à parts égales" data-en="⚖ for / against, equal weight">⚖ pour / objections à parts égales</span>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== SCROLLYTELLING ===================== -->
+<section class="section">
+  <div class="wrap">
+    <div class="rule-gold reveal" style="margin-bottom:2rem"><span class="dot"></span></div>
+    <div class="scrolly">
+      <!-- Sticky figure -->
+      <div class="scrolly__figure">
+        <div class="figpanel">
+          <div class="figpanel__head">
+            <span class="t" id="figLabel" data-fr="La chronologie" data-en="The timeline">La chronologie</span>
+            <span class="badge badge--doc"><span class="g">✓</span>documenté</span>
+          </div>
+
+          <!-- State: timeline -->
+          <div class="figstate on" data-state="timeline">
+            <ul class="tl" id="timeline">
+              <li data-k="avr"><span class="d">3 avr. 2026</span><div class="e" data-fr="Ouverture du Master Poulet, près de la mairie." data-en="Master Poulet opens, near the town hall.">Ouverture du Master Poulet, près de la mairie.</div></li>
+              <li data-k="bloc"><span class="d">6 avr. 2026</span><div class="e" data-fr="La ville pose des blocs de béton devant l'entrée." data-en="The city sets concrete blocks at the door.">La ville pose des blocs de béton devant l'entrée.</div></li>
+              <li data-k="trib"><span class="d">avr. 2026</span><div class="e" data-fr="Le tribunal juge le blocage illégal (liberté d'entreprendre)." data-en="Court rules the blocking illegal (freedom of enterprise).">Le tribunal juge le blocage illégal (liberté d'entreprendre).</div></li>
+              <li data-k="pot"><span class="d">avr. 2026</span><div class="e" data-fr="Réponse de la ville : des jardinières géantes." data-en="The city's reply: giant flowerpots.">Réponse de la ville : des jardinières géantes.</div></li>
+              <li data-k="nat"><span class="d">mai 2026</span><div class="e" data-fr="Le débat devient national : 55 % approuvent le maire (Ifop)." data-en="The debate goes national: 55% approve of the mayor (Ifop).">Le débat devient national : 55 % approuvent le maire (Ifop).</div></li>
+            </ul>
+            <div class="figsrc" data-fr="Faits de presse recoupés · sondage Ifop, mai 2026" data-en="Cross-checked reporting · Ifop poll, May 2026">Faits de presse recoupés · sondage Ifop, mai 2026</div>
+          </div>
+
+          <!-- State: price -->
+          <div class="figstate" data-state="price">
+            <svg class="chart" id="priceChart" viewBox="0 0 460 360" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Prix médian au m² 2021–2024 : Saint-Ouen vs départements"></svg>
+            <div class="figsrc">Source : DVF — Etalab / DGFiP · Licence Ouverte 2.0</div>
+          </div>
+
+          <!-- State: crime -->
+          <div class="figstate" data-state="crime">
+            <svg class="chart" id="crimeChart" viewBox="0 0 460 320" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Délinquance enregistrée à Saint-Ouen pour 1000 habitants, 2016–2025"></svg>
+            <div class="kpi__caveat" style="margin-top:.6rem"><span aria-hidden="true">⚠</span><span data-fr="Niveau communal — ne décrit pas un quartier (sophisme écologique)." data-en="Commune level — does not describe a neighborhood (ecological fallacy).">Niveau communal — ne décrit pas un quartier (sophisme écologique).</span></div>
+            <div class="figsrc">Source : SSMSI — Ministère de l'Intérieur · base communale</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Steps -->
+      <div class="steps">
+        <div class="step reveal" data-step="timeline" data-hot="avr">
+          <span class="num">01</span>
+          <h2 data-fr="Trois jours, et une ville bascule." data-en="Three days, and a town tips over.">Trois jours, et une ville bascule.</h2>
+          <p data-fr="Le restaurant ouvre presque sous les fenêtres de la mairie. Trois jours plus tard, la municipalité ferme l'accès. Le poulet braisé à 5 € devient un symbole." data-en="The shop opens almost under the town hall's windows. Three days later, the city closes the access. €5 braised chicken becomes a symbol.">Le restaurant ouvre presque sous les fenêtres de la mairie. Trois jours plus tard, la municipalité ferme l'accès. Le poulet braisé à 5 € devient un symbole.</p>
+        </div>
+        <div class="step reveal" data-step="timeline" data-hot="trib">
+          <span class="num">02</span>
+          <h2 data-fr="Blocs de béton, puis jardinières." data-en="Concrete blocks, then flowerpots.">Blocs de béton, puis jardinières.</h2>
+          <p data-fr="Le tribunal administratif juge le blocage illégal : on ne peut entraver la liberté d'entreprendre. La ville répond par des jardinières géantes. L'image fait le tour du pays." data-en="The administrative court rules the blocking illegal: you cannot obstruct the freedom of enterprise. The city replies with giant flowerpots. The image travels the country.">Le tribunal administratif juge le blocage illégal : on ne peut entraver la liberté d'entreprendre. La ville répond par des jardinières géantes. L'image fait le tour du pays.</p>
+        </div>
+        <div class="step reveal" data-step="price" data-hot="">
+          <span class="num">03</span>
+          <h2 data-fr="Le chiffre qui dérange : le prix a baissé." data-en="The inconvenient number: prices fell.">Le chiffre qui dérange : le prix a baissé.</h2>
+          <p data-fr="On a parlé de flambée, de quartier « bradé ». Les ventes réelles (DVF) disent l'inverse : le prix médian de Saint-Ouen est passé de 7 001 €/m² en 2021 à 6 399 €/m² en 2024." data-en="There was talk of a price surge, of a neighborhood “sold off”. The real sales data (DVF) says the opposite: Saint-Ouen's median fell from €7,001/m² in 2021 to €6,399/m² in 2024.">On a parlé de flambée, de quartier « bradé ». Les ventes réelles (DVF) disent l'inverse : le prix médian de Saint-Ouen est passé de 7 001 €/m² en 2021 à 6 399 €/m² en 2024.</p>
+          <div class="stat"><b>−9&nbsp;%</b><span class="badge badge--doc"><span class="g">✓</span>documenté</span></div>
+        </div>
+        <div class="step reveal" data-step="price" data-hot="">
+          <span class="num">04</span>
+          <h2 data-fr="La cause précède le commerce." data-en="The cause precedes the shop.">La cause précède le commerce.</h2>
+          <p data-fr="La restauration à bas prix s'installe là où les loyers sont déjà bas — pas l'inverse. Lire une carte du prix comme un effet du poulet, c'est inverser la flèche du temps." data-en="Cheap food locates where rents are already low — not the other way around. Reading a price map as an effect of the chicken shop reverses the arrow of time.">La restauration à bas prix s'installe là où les loyers sont déjà bas — pas l'inverse. Lire une carte du prix comme un effet du poulet, c'est inverser la flèche du temps.</p>
+        </div>
+        <div class="step reveal" data-step="crime" data-hot="">
+          <span class="num">05</span>
+          <h2 data-fr="La délinquance ? Un contexte, pas une cause." data-en="Crime? Context, not a cause.">La délinquance ? Un contexte, pas une cause.</h2>
+          <p data-fr="La donnée n'existe qu'à l'échelle de la commune. Elle recule à Saint-Ouen depuis 2021. La rattacher à un commerce ou à une population relèverait du sophisme écologique." data-en="The data only exists at commune scale. It has been falling in Saint-Ouen since 2021. Tying it to a business or a population would be an ecological fallacy.">La donnée n'existe qu'à l'échelle de la commune. Elle recule à Saint-Ouen depuis 2021. La rattacher à un commerce ou à une population relèverait du sophisme écologique.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== DRAW YOUR GUESS ===================== -->
+<section class="guess section">
+  <div class="wrap">
+    <span class="eyebrow reveal" data-fr="À vous de juger" data-en="You be the judge">À vous de juger</span>
+    <h2 class="reveal" style="margin-top:.6rem;max-width:20ch" data-fr="Selon vous, le prix a fait quoi depuis 2021 ?" data-en="In your view, what did prices do since 2021?">Selon vous, le prix a fait quoi depuis 2021 ?</h2>
+    <div class="guess__grid" style="margin-top:1.6rem">
+      <div class="reveal">
+        <p class="muted" data-fr="Faites glisser le point de 2024 là où vous pensez que le prix médian a atterri. On part de 7 001 €/m² en 2021." data-en="Drag the 2024 point to where you think the median landed. We start from €7,001/m² in 2021.">Faites glisser le point de 2024 là où vous pensez que le prix médian a atterri. On part de 7 001 €/m² en 2021.</p>
+        <div class="guess__read">
+          <div><div class="b" id="guessVal">7 800 €</div><div class="l" data-fr="votre estimation 2024" data-en="your 2024 guess">votre estimation 2024</div></div>
+          <div><div class="b" id="guessPct">+11 %</div><div class="l" data-fr="votre variation" data-en="your change">votre variation</div></div>
+        </div>
+        <button class="btn btn--primary" id="revealBtn" data-fr="Révéler la donnée réelle" data-en="Reveal the real data">Révéler la donnée réelle</button>
+        <p class="guess__reveal" id="guessReveal" style="margin-top:1rem"></p>
+      </div>
+      <div class="reveal reveal-d1">
+        <svg class="guess__svg" id="guessSvg" viewBox="0 0 460 300" role="application" aria-label="Tracez votre estimation du prix 2024"></svg>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== DEBATE ===================== -->
+<section class="section">
+  <div class="wrap">
+    <span class="eyebrow reveal" data-fr="Le débat, à parts égales" data-en="The debate, equal weight">Le débat, à parts égales</span>
+    <h2 class="reveal" style="margin-top:.6rem;max-width:24ch" data-fr="Deux lectures d'un même commerce." data-en="Two readings of the same shop.">Deux lectures d'un même commerce.</h2>
+    <div class="debate__cols">
+      <div class="col col--pro reveal">
+        <div class="col__head"><span class="ic">✓</span><h3 data-fr="Pour — accessibilité & liberté" data-en="For — access & freedom">Pour — accessibilité & liberté</h3></div>
+        <div class="arg">
+          <p data-fr="« Un repas chaud à 5 € dans un quartier populaire, c'est un service réel pour des familles modestes. »" data-en="“A hot meal for €5 in a working-class area is a real service for low-income families.”">« Un repas chaud à 5 € dans un quartier populaire, c'est un service réel pour des familles modestes. »</p>
+          <div class="arg__foot"><span class="badge badge--eme"><span class="g">~</span>émergent</span><span class="source" style="margin:0" data-fr="position du dossier de soutien" data-en="from the support dossier">position du dossier de soutien</span></div>
+        </div>
+        <div class="arg">
+          <p data-fr="« Bloquer une enseigne légale, c'est entraver la liberté d'entreprendre » — ce que le tribunal a confirmé." data-en="“Blocking a legal business obstructs the freedom of enterprise” — which the court confirmed.">« Bloquer une enseigne légale, c'est entraver la liberté d'entreprendre » — ce que le tribunal a confirmé.</p>
+          <div class="arg__foot"><span class="badge badge--doc"><span class="g">✓</span>documenté</span><span class="source" style="margin:0" data-fr="décision du tribunal administratif" data-en="administrative court ruling">décision du tribunal administratif</span></div>
+        </div>
+      </div>
+      <div class="col col--con reveal reveal-d1">
+        <div class="col__head"><span class="ic">!</span><h3 data-fr="Objections — cadre & limites" data-en="Objections — framing & limits">Objections — cadre & limites</h3></div>
+        <div class="arg">
+          <p data-fr="« Concentrer des enseignes identiques appauvrit l'offre commerciale » — affirmation plausible mais non démontrée ici." data-en="“Concentrating identical outlets impoverishes local retail” — plausible but not demonstrated here.">« Concentrer des enseignes identiques appauvrit l'offre commerciale » — affirmation plausible mais non démontrée ici.</p>
+          <div class="arg__foot"><span class="badge badge--eme"><span class="g">~</span>émergent</span><span class="source" style="margin:0" data-fr="hypothèse urbaine, non testée" data-en="urban hypothesis, untested">hypothèse urbaine, non testée</span></div>
+        </div>
+        <div class="arg">
+          <p data-fr="« Le quartier se dégrade » — la délinquance communale recule depuis 2021 ; rien ne la relie à ce commerce." data-en="“The area is deteriorating” — commune crime has fallen since 2021; nothing ties it to this shop.">« Le quartier se dégrade » — la délinquance communale recule depuis 2021 ; rien ne la relie à ce commerce.</p>
+          <div class="arg__foot"><span class="badge badge--con"><span class="g">!</span>contesté</span><span class="source" style="margin:0">SSMSI · base communale</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="dossier-note reveal">
+      <svg class="ic" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="12" r="9"/><path d="M12 8h.01M11 12h1v4h1"/></svg>
+      <p data-fr="Le « pour » s'appuie sur un dossier de soutien à Master Poulet : il est cité comme la position d'une partie, jamais comme la voix de l'observatoire." data-en="The “for” column draws on a pro-Master-Poulet support dossier: it is cited as one party's position, never as the observatory's voice.">Le « pour » s'appuie sur un dossier de soutien à Master Poulet : il est cité <b>comme la position d'une partie</b>, jamais comme la voix de l'observatoire.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== WHAT THIS DOES NOT SAY ===================== -->
+<section class="section" style="padding-top:0">
+  <div class="wrap">
+    <span class="eyebrow reveal" data-fr="Ce que ces données ne disent pas" data-en="What this data does not say">Ce que ces données ne disent pas</span>
+    <div class="notsaid">
+      <div class="it reveal"><div class="x">✕</div><p data-fr="Que le poulet fait monter ou baisser les prix. La corrélation n'est pas une cause." data-en="That chicken raises or lowers prices. Correlation is not causation.">Que le poulet fait monter ou baisser les prix. La corrélation n'est pas une cause.</p></div>
+      <div class="it reveal reveal-d1"><div class="x">✕</div><p data-fr="Que tel quartier est « dangereux ». La délinquance est communale, jamais un quartier." data-en="That a given neighborhood is “dangerous”. Crime is commune-level, never a neighborhood.">Que tel quartier est « dangereux ». La délinquance est communale, jamais un quartier.</p></div>
+      <div class="it reveal reveal-d2"><div class="x">✕</div><p data-fr="Quoi que ce soit sur le blanchiment : risque général réel, mais non prouvé pour ces enseignes." data-en="Anything about money laundering: a real general risk, but unproven for these brands.">Quoi que ce soit sur le blanchiment : risque général réel, mais non prouvé pour ces enseignes.</p></div>
+    </div>
+    <div style="display:flex;gap:.8rem;flex-wrap:wrap;margin-top:2rem" class="reveal">
+      <a class="btn btn--primary" href="explorer.html" data-fr="Explorer la carte" data-en="Explore the map">Explorer la carte</a>
+      <a class="btn btn--ghost" href="systeme.html" data-fr="Méthodes & limites" data-en="Methods & limits">Méthodes & limites</a>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer class="footer">
+  <div class="wrap" style="padding-block:1.6rem"><p class="source">Réutilisation sous Licence Ouverte / Etalab 2.0 (OSM : ODbL). Observatoire indépendant — non affilié à une enseigne ni à un élu. <a href="systeme.html">Sources</a> · <a href="index.html" data-fr="Accueil" data-en="Home">Accueil</a>.</p></div>
+</footer>
+
+<script src="assets/site.js"></script>
+<script src="assets/affaire.js?v=1"></script>
+</body>
+</html>

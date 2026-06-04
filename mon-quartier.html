@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="fr" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mon quartier — la vie & la mort des fast-foods autour de chez vous · Observatoire Poulet & Quartiers</title>
+<meta name="description" content="Tapez votre adresse : combien de fast-foods autour de chez vous, lesquels ont fermé ou fait faillite, et combien de temps ils tiennent — courbe de survie SIRENE vs votre commune et la France. Données ouvertes, RGPD-safe.">
+<link rel="stylesheet" href="assets/tokens.css">
+<style>
+  /* ---------- Hero / search ---------- */
+  .qhero { position: relative; overflow: hidden; border-bottom: 1px solid var(--line); }
+  .qhero__img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center 30%; opacity: .9; }
+  .qhero__scrim { position: absolute; inset: 0; background: linear-gradient(180deg, rgba(20,14,6,.42), rgba(20,14,6,.66)); }
+  .qhero__in { position: relative; padding-block: clamp(2.4rem, 6vw, 4.2rem); }
+  .qhero .eyebrow { color: var(--gold); }
+  .qhero h1 { color: #FBF5E9; font-size: clamp(2rem,1.3rem+3vw,3.4rem); font-weight: 500; max-width: 18ch; line-height: 1.08; margin-top: .8rem; }
+  .qhero p { color: rgba(251,245,233,.84); max-width: 50ch; margin-top: 1rem; font-size: 1.1rem; }
+
+  .searchbar { margin-top: 1.8rem; max-width: 640px; }
+  .searchbar__row { display: flex; gap: .5rem; background: var(--surface); border: 1px solid var(--line-2); border-radius: var(--r-pill); padding: .3rem .3rem .3rem 1.1rem; box-shadow: var(--shadow-3); }
+  .searchbar__row svg { color: var(--ink-3); flex: none; align-self: center; }
+  .searchbar input { flex: 1; border: 0; background: none; font: inherit; font-size: 1.05rem; color: var(--ink); padding: .7rem .2rem; outline: none; min-width: 0; }
+  .searchbar button.go { border: 0; background: linear-gradient(180deg,var(--accent),var(--accent-strong)); color: var(--on-accent); border-radius: var(--r-pill); padding: 0 1.3rem; min-height: 48px; font-weight: 600; cursor: pointer; font-size: .95rem; white-space: nowrap; }
+  .searchbar button.go:hover { background: linear-gradient(180deg,var(--accent-strong),var(--accent-deep)); }
+  .searchbar__hint { display: flex; gap: .5rem; flex-wrap: wrap; margin-top: .8rem; align-items: center; }
+  .searchbar__hint .lbl { font-family: var(--font-mono); font-size: var(--t-mono); color: rgba(251,245,233,.7); }
+  .chip { font-family: var(--font-mono); font-size: var(--t-mono); color: #FBF5E9; background: rgba(251,245,233,.14); border: 1px solid rgba(251,245,233,.24); border-radius: var(--r-pill); padding: .32rem .7rem; cursor: pointer; transition: .15s; }
+  .chip:hover { background: rgba(251,245,233,.26); }
+  .searchbar__status { font-family: var(--font-mono); font-size: var(--t-mono); color: rgba(251,245,233,.78); margin-top: .7rem; min-height: 1.2em; }
+
+  /* ---------- Results ---------- */
+  .results { padding-block: clamp(2rem, 4vw, 3.2rem); }
+  .results[hidden] { display: none; }
+  .res__head { display: flex; align-items: flex-end; justify-content: space-between; gap: 1rem; flex-wrap: wrap; margin-bottom: 1.4rem; }
+  .res__place { font-family: var(--font-display); font-size: clamp(1.5rem,1.2rem+1.2vw,2rem); font-weight: 600; }
+  .res__sub { font-family: var(--font-mono); font-size: var(--t-mono); color: var(--ink-3); margin-top: .25rem; }
+  .radius-ctl { display: flex; align-items: center; gap: .7rem; background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-pill); padding: .4rem .9rem; }
+  .radius-ctl label { font-family: var(--font-mono); font-size: var(--t-mono); color: var(--ink-2); }
+  .radius-ctl input[type=range] { accent-color: var(--accent); width: 130px; }
+  .radius-ctl .val { font-family: var(--font-mono); font-size: var(--t-sm); font-weight: 600; color: var(--accent-strong); min-width: 4ch; }
+
+  /* Stat tiles */
+  .stat-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: .8rem; margin-bottom: 1.6rem; }
+  .stat { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-md); padding: 1rem 1.1rem; box-shadow: var(--shadow-1); }
+  .stat .v { font-family: var(--font-display); font-size: clamp(1.6rem,1.2rem+1vw,2.1rem); font-weight: 600; line-height: 1; }
+  .stat .v.alive { color: var(--doc); } .stat .v.dead { color: var(--con); } .stat .v.gold { color: var(--accent-strong); }
+  .stat .l { font-size: var(--t-xs); color: var(--ink-2); margin-top: .4rem; line-height: 1.3; }
+  @media (max-width: 920px){ .stat-grid { grid-template-columns: repeat(3,1fr); } }
+  @media (max-width: 520px){ .stat-grid { grid-template-columns: repeat(2,1fr); } }
+
+  .panels { display: grid; grid-template-columns: 1.15fr .85fr; gap: 1.2rem; }
+  @media (max-width: 920px){ .panels { grid-template-columns: 1fr; } }
+  .panel { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-lg); padding: 1.4rem 1.5rem; box-shadow: var(--shadow-1); }
+  .panel h3 { font-family: var(--font-sans); font-size: 1.05rem; font-weight: 700; display: flex; align-items: center; gap: .5rem; }
+  .panel .sub { font-size: var(--t-sm); color: var(--ink-2); margin: .3rem 0 1rem; }
+
+  /* survival chart */
+  .surv { width: 100%; height: auto; }
+  .surv-legend { display: flex; gap: 1.1rem; flex-wrap: wrap; margin-top: .6rem; }
+  .surv-legend span { display: inline-flex; align-items: center; gap: .4rem; font-family: var(--font-mono); font-size: var(--t-mono); color: var(--ink-2); }
+  .surv-legend i { width: 16px; height: 3px; border-radius: 2px; }
+
+  /* brand breakdown */
+  .brand-row { display: flex; align-items: center; gap: .7rem; padding: .5rem 0; border-top: 1px solid var(--line); }
+  .brand-row:first-of-type { border-top: 0; }
+  .brand-row .sw { width: 12px; height: 12px; border-radius: 3px; flex: none; }
+  .brand-row .nm { font-size: var(--t-sm); font-weight: 500; }
+  .brand-row .named { font-family: var(--font-mono); font-size: 9px; letter-spacing: .04em; color: var(--accent-strong); border: 1px solid var(--accent-soft); background: var(--accent-tint); border-radius: var(--r-pill); padding: .05rem .4rem; }
+  .brand-row .bar { flex: 1; height: 8px; background: var(--surface-2); border-radius: 4px; overflow: hidden; min-width: 40px; }
+  .brand-row .bar i { display: block; height: 100%; }
+  .brand-row .ct { font-family: var(--font-mono); font-size: var(--t-mono); color: var(--ink-2); min-width: 5.5ch; text-align: right; }
+
+  /* closures list */
+  .closures { margin-top: 1.6rem; }
+  .clo-grid { display: grid; grid-template-columns: repeat(auto-fill,minmax(220px,1fr)); gap: .8rem; margin-top: 1rem; }
+  .clo { background: var(--surface); border: 1px solid var(--line); border-left: 3px solid var(--con); border-radius: var(--r-md); padding: .9rem 1rem; }
+  .clo.bankrupt { border-left-color: var(--con); background: var(--con-soft); }
+  .clo .top { display: flex; align-items: center; gap: .5rem; }
+  .clo .sw { width: 10px; height: 10px; border-radius: 3px; flex: none; }
+  .clo .nm { font-size: var(--t-sm); font-weight: 600; }
+  .clo .span { font-family: var(--font-mono); font-size: var(--t-mono); color: var(--ink-2); margin-top: .35rem; }
+  .clo .tag { display: inline-flex; align-items: center; gap: .3rem; font-family: var(--font-mono); font-size: 9px; letter-spacing: .03em; margin-top: .5rem; padding: .12rem .45rem; border-radius: var(--r-pill); }
+  .clo .tag.bk { background: var(--con); color: var(--on-accent); }
+  .clo .tag.cl { background: var(--surface-2); color: var(--ink-2); border: 1px solid var(--line); }
+
+  /* honesty note */
+  .honesty { display: flex; gap: 1rem; align-items: flex-start; background: var(--accent-tint); border: 1px solid var(--accent-soft); border-radius: var(--r-md); padding: 1.1rem 1.3rem; margin-top: 1.6rem; }
+  .honesty svg { color: var(--accent-strong); flex: none; }
+  .honesty p { font-size: var(--t-sm); color: var(--ink-2); margin: 0; }
+  .honesty b { color: var(--ink); }
+
+  .share-row { display: flex; gap: .7rem; flex-wrap: wrap; align-items: center; margin-top: 1.6rem; }
+
+  /* empty / loading */
+  .qload { display: flex; align-items: center; gap: .7rem; font-family: var(--font-mono); font-size: var(--t-sm); color: var(--ink-2); padding: 2rem 0; }
+  .qload .spin { width: 22px; height: 22px; border-radius: 50%; border: 3px solid var(--line-2); border-top-color: var(--accent); animation: qspin 1s linear infinite; }
+  @keyframes qspin { to { transform: rotate(360deg); } }
+
+  .how { border-top: 1px solid var(--line); background: var(--surface-2); }
+  .how__grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 1.2rem; margin-top: 1.4rem; }
+  .how .it { border-left: 3px solid var(--accent); padding-left: 1rem; }
+  .how .it b { display: block; margin-bottom: .25rem; }
+  .how .it p { font-size: var(--t-sm); color: var(--ink-2); margin: 0; }
+  @media (max-width: 760px){ .how__grid { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+
+<header class="nav">
+  <div class="wrap nav__in">
+    <a class="brand" href="index.html" aria-label="Accueil">
+      <svg width="30" height="30" viewBox="0 0 32 32" aria-hidden="true"><path d="M16 2C10.5 2 6 6.4 6 11.9c0 7.2 8.4 16.5 9.2 17.4a1.1 1.1 0 0 0 1.6 0c.8-.9 9.2-10.2 9.2-17.4C26 6.4 21.5 2 16 2Z" fill="var(--accent)"/><circle cx="16" cy="12" r="4.4" fill="var(--paper)"/></svg>
+      <span class="brand__name">Observatoire <span class="amp">&</span> Quartiers</span>
+    </a>
+    <button class="icon-btn nav__burger" aria-label="Menu" aria-expanded="false" aria-controls="nav-links">☰</button>
+    <nav class="nav__links" id="nav-links" aria-label="Navigation principale">
+      <a class="nav__link" href="mon-quartier.html" aria-current="page" data-fr="Mon quartier" data-en="My neighborhood">Mon quartier</a>
+      <a class="nav__link" href="affaire-saint-ouen.html" data-fr="L'affaire Saint-Ouen" data-en="The Saint-Ouen affair">L'affaire Saint-Ouen</a>
+      <a class="nav__link" href="explorer.html" data-fr="Explorer la carte" data-en="Explore the map">Explorer la carte</a>
+      <a class="nav__link" href="explorer.html#comparer" data-fr="Comparer" data-en="Compare">Comparer</a>
+      <a class="nav__link" href="systeme.html" data-fr="Méthodes" data-en="Methods">Méthodes</a>
+    </nav>
+    <div class="nav__tools">
+      <div class="lang" role="group" aria-label="Langue"><button data-lang="fr" aria-pressed="true">FR</button><button data-lang="en" aria-pressed="false">EN</button></div>
+      <button class="icon-btn" data-theme-toggle aria-label="Thème">☾</button>
+    </div>
+  </div>
+</header>
+
+<main>
+<!-- ===================== HERO + SEARCH ===================== -->
+<section class="qhero">
+  <img class="qhero__img" src="assets/img/floor.png" alt="">
+  <div class="qhero__scrim"></div>
+  <div class="wrap qhero__in">
+    <span class="eyebrow" data-fr="Nouveau · à l'échelle de la France" data-en="New · nationwide">Nouveau · à l'échelle de la France</span>
+    <h1 data-fr="La vie & la mort des fast-foods autour de chez vous." data-en="The life & death of the fast-food shops around you.">La vie & la mort des fast-foods autour de chez vous.</h1>
+    <p data-fr="Tapez votre adresse. On compte les fast-foods voisins, on montre lesquels ont fermé ou fait faillite, et combien de temps ils tiennent — face à votre commune et à la France." data-en="Type your address. We count the nearby fast-food shops, show which closed or went bankrupt, and how long they last — against your commune and France.">Tapez votre adresse. On compte les fast-foods voisins, on montre lesquels ont fermé ou fait faillite, et combien de temps ils tiennent — face à votre commune et à la France.</p>
+
+    <div class="searchbar">
+      <form class="searchbar__row" id="qForm" role="search">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21c5-5 7-8.6 7-12a7 7 0 1 0-14 0c0 3.4 2 7 7 12Z"/><circle cx="12" cy="9" r="2.4"/></svg>
+        <input id="qInput" placeholder="Votre adresse, ou une ville…" autocomplete="off" aria-label="Adresse">
+        <button type="submit" class="go" data-fr="Analyser" data-en="Analyze">Analyser</button>
+      </form>
+      <div class="searchbar__hint">
+        <span class="lbl" data-fr="Essayez :" data-en="Try:">Essayez :</span>
+        <button class="chip" data-q="Mairie de Saint-Ouen">Saint-Ouen</button>
+        <button class="chip" data-q="Barbès, Paris 18e">Paris 18e</button>
+        <button class="chip" data-q="Aubervilliers">Aubervilliers</button>
+      </div>
+      <div class="searchbar__status" id="qStatus" role="status"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== RESULTS ===================== -->
+<section class="results wrap" id="qResults" hidden>
+  <div class="res__head">
+    <div>
+      <div class="res__place" id="resPlace">—</div>
+      <div class="res__sub" id="resSub">—</div>
+    </div>
+    <div class="radius-ctl">
+      <label for="qRadius" data-fr="Rayon" data-en="Radius">Rayon</label>
+      <input type="range" id="qRadius" min="200" max="1500" step="100" value="800">
+      <span class="val" id="qRadiusVal">800 m</span>
+    </div>
+  </div>
+
+  <div class="stat-grid" id="statGrid"></div>
+
+  <div id="demoNote" hidden style="background:var(--eme-soft);border:1px solid var(--eme-line);border-radius:var(--r-md);padding:1rem 1.2rem;margin-bottom:1.6rem;font-size:var(--t-sm);color:var(--ink-2)">
+    <b style="color:var(--eme)" data-fr="Démonstration" data-en="Demo">Démonstration</b> — <span data-fr="les établissements affichés proviennent d'un échantillon de démonstration calé sur le schéma SIRENE réel — y compris les faillites marquées « démo ». En production, ces données sont chargées depuis le shard départemental SIRENE et le BODACC en direct. Les courbes nationale et communale restent issues de données réelles." data-en="the shops shown come from a demo sample shaped to the real SIRENE schema — including bankruptcies tagged “demo”. In production this data loads from the SIRENE department shard and live BODACC. The national and commune curves are from real data.">les établissements affichés proviennent d'un échantillon de démonstration calé sur le schéma SIRENE réel — y compris les faillites marquées « démo ». En production, ces données sont chargées depuis le shard départemental SIRENE et le BODACC en direct. Les courbes nationale et communale restent issues de données réelles.</span>
+  </div>
+
+  <div class="panels">
+    <div class="panel">
+      <h3 data-fr="Courbe de survie" data-en="Survival curve"><span data-fr="Courbe de survie" data-en="Survival curve">Courbe de survie</span> <span class="badge badge--doc"><span class="g">✓</span>SIRENE</span></h3>
+      <p class="sub" data-fr="Part encore ouverte après t années — votre quartier face à la commune et à la France. Descriptif, non causal." data-en="Share still open after t years — your area vs the commune and France. Descriptive, not causal.">Part encore ouverte après t années — votre quartier face à la commune et à la France. Descriptif, non causal.</p>
+      <svg class="surv" id="survChart" viewBox="0 0 480 300" role="img" aria-label="Courbe de survie des fast-foods"></svg>
+      <div class="surv-legend" id="survLegend"></div>
+    </div>
+    <div class="panel">
+      <h3 data-fr="Enseignes du quartier" data-en="Brands in the area">Enseignes du quartier</h3>
+      <p class="sub" data-fr="Réparties par marque. Les indépendants ne sont jamais nommés (RGPD)." data-en="By brand. Independents are never named (GDPR).">Réparties par marque. Les indépendants ne sont jamais nommés (RGPD).</p>
+      <div id="brandList"></div>
+    </div>
+  </div>
+
+  <div class="closures">
+    <h3 style="font-family:var(--font-sans);font-size:1.05rem;font-weight:700" data-fr="Celles qui ont fermé" data-en="The ones that closed">Celles qui ont fermé</h3>
+    <p class="sub" style="max-width:60ch" data-fr="Fermetures et faillites recensées dans le rayon. Une fermeture est un événement courant de la vie des commerces — pas un signe de quartier « en déclin »." data-en="Closures and bankruptcies on record within the radius. A closure is a routine event in business life — not a sign of a “declining” neighborhood.">Fermetures et faillites recensées dans le rayon. Une fermeture est un événement courant de la vie des commerces — pas un signe de quartier « en déclin ».</p>
+    <div class="clo-grid" id="cloGrid"></div>
+  </div>
+
+  <div class="honesty">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="12" r="9"/><path d="M12 8h.01M11 12h1v4h1"/></svg>
+    <p id="honestyText" data-fr="Honnête par construction : les fermetures sont une rotation normale des petits commerces, les indépendants ne sont jamais nommés, et le chiffre d'affaires n'est montré que là où il est public. Les faillites sont interrogées en direct auprès du BODACC." data-en="Honest by design: closures are normal small-business churn, independents are never named, and revenue is shown only where public. Bankruptcies are queried live from BODACC.">Honnête par construction : les fermetures sont une <b>rotation normale</b> des petits commerces, les indépendants ne sont jamais nommés, et le chiffre d'affaires n'est montré que là où il est public. Les faillites sont interrogées en direct auprès du BODACC.</p>
+  </div>
+
+  <div class="share-row">
+    <button class="btn btn--primary" id="shareBtn" data-fr="⬇ Télécharger ma carte de quartier" data-en="⬇ Download my neighborhood card">⬇ Télécharger ma carte de quartier</button>
+    <a class="btn btn--ghost" href="explorer.html" data-fr="Voir sur la carte" data-en="See on the map">Voir sur la carte</a>
+    <span class="source" id="shareSrc" style="margin:0">SIRENE (INSEE) · BODACC (DILA) · géocodage IGN — Licence Ouverte</span>
+  </div>
+</section>
+
+<!-- ===================== HOW IT WORKS ===================== -->
+<section class="how">
+  <div class="wrap" style="padding-block:2.6rem">
+    <span class="eyebrow" data-fr="Comment ça marche" data-en="How it works">Comment ça marche</span>
+    <div class="how__grid">
+      <div class="it"><b data-fr="Géocodage IGN" data-en="IGN geocoding">Géocodage IGN</b><p data-fr="Votre adresse devient un point (data.geopf.fr). Rien n'est stocké, aucun cookie, aucun pisteur." data-en="Your address becomes a point (data.geopf.fr). Nothing is stored, no cookies, no trackers.">Votre adresse devient un point (data.geopf.fr). Rien n'est stocké, aucun cookie, aucun pisteur.</p></div>
+      <div class="it"><b data-fr="Recensement SIRENE" data-en="SIRENE registry">Recensement SIRENE</b><p data-fr="393 015 fast-foods en France (NAF 56.10C), dont 233 152 déjà fermés — avec date de création et de fermeture." data-en="393,015 fast-food shops in France (NAF 56.10C), of which 233,152 already closed — with creation and closure dates.">393 015 fast-foods en France (NAF 56.10C), dont 233 152 déjà fermés — avec date de création et de fermeture.</p></div>
+      <div class="it"><b data-fr="Faillites BODACC en direct" data-en="Live BODACC bankruptcies">Faillites BODACC en direct</b><p data-fr="Les procédures collectives sont interrogées par SIREN au moment où vous regardez. Indisponible ? Le reste fonctionne quand même." data-en="Insolvency proceedings are queried by SIREN as you look. Unavailable? The rest still works.">Les procédures collectives sont interrogées par SIREN au moment où vous regardez. Indisponible ? Le reste fonctionne quand même.</p></div>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer class="footer">
+  <div class="wrap" style="padding-block:1.6rem"><p class="source">Réutilisation sous Licence Ouverte / Etalab 2.0. SIRENE (INSEE) · BODACC (DILA) · IGN. Observatoire indépendant. <a href="systeme.html" data-fr="Méthodes & limites" data-en="Methods & limits">Méthodes &amp; limites</a> · <a href="index.html" data-fr="Accueil" data-en="Home">Accueil</a>.</p></div>
+</footer>
+
+<script src="assets/quartier-data.js"></script>
+<script src="assets/site.js"></script>
+<script src="assets/quartier.js?v=2"></script>
+</body>
+</html>

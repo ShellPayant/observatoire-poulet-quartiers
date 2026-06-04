@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="fr" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Système, méthodes & sources — Observatoire Poulet & Quartiers</title>
+<meta name="description" content="L'identité, le système de design, la méthode et les sources de l'Observatoire Poulet & Quartiers.">
+<link rel="stylesheet" href="assets/tokens.css">
+<style>
+  .shero { padding-block: clamp(2.5rem, 6vw, 4.5rem); }
+  .shero h1 { font-size: clamp(2.2rem,1.4rem+2.6vw,3.4rem); font-weight:500; max-width:18ch; }
+  .shero p { color: var(--ink-2); max-width: 50ch; margin-top: 1rem; font-size: 1.1rem; }
+
+  .block { padding-block: clamp(2rem, 4vw, 3.2rem); border-top: 1px solid var(--line); }
+  .block__head { display:flex; align-items:flex-start; gap:1rem; margin-bottom:1.4rem; flex-wrap:wrap; }
+  .block__n { font-family: var(--font-mono); font-size: var(--t-mono); color: var(--gold-lo); letter-spacing:.1em; padding-top:.5rem; }
+  .block h2 { font-size: clamp(1.5rem,1.2rem+1.2vw,2rem); font-weight:500; }
+  .lead { color: var(--ink-2); max-width: 56ch; }
+
+  /* Identity */
+  .identity { display:grid; grid-template-columns: 1fr 1fr; gap:1.2rem; }
+  .idcard { background: var(--surface); border:1px solid var(--line); border-radius: var(--r-lg); padding: 1.6rem; }
+  .logo-xl { display:flex; align-items:center; gap:.8rem; }
+  .logo-xl .nm { font-family: var(--font-display); font-size: 1.7rem; font-weight:600; }
+  .logo-xl .nm .amp { color: var(--accent); }
+  .tagline { font-family: var(--font-display); font-style: italic; font-size: 1.4rem; color: var(--ink); margin-top:.4rem; }
+  .tagline .en { display:block; font-size:.9rem; font-style:normal; color:var(--ink-3); font-family:var(--font-mono); margin-top:.4rem; }
+  @media (max-width:760px){ .identity { grid-template-columns:1fr; } }
+
+  /* Color */
+  .swatches { display:grid; grid-template-columns: repeat(auto-fill,minmax(118px,1fr)); gap:.7rem; }
+  .sw { border-radius: var(--r-md); overflow:hidden; border:1px solid var(--line); background:var(--surface); }
+  .sw .c { height: 64px; }
+  .sw .m { padding:.5rem .6rem; font-family:var(--font-mono); font-size:10px; }
+  .sw .m b { display:block; font-size:var(--t-xs); color:var(--ink); font-weight:600; margin-bottom:.1rem; }
+  .sw .m span { color: var(--ink-3); }
+  .ramp { display:flex; height:30px; border-radius: var(--r-sm); overflow:hidden; border:1px solid var(--line); margin-top:.4rem; }
+  .ramp i { flex:1; }
+  .ramprow { margin-bottom:1rem; }
+  .ramprow .t { font-family:var(--font-mono); font-size:var(--t-mono); color:var(--ink-2); }
+
+  /* Type */
+  .type-spec { background:var(--surface); border:1px solid var(--line); border-radius:var(--r-lg); padding:1.4rem 1.6rem; margin-bottom:1rem; }
+  .type-spec .meta { font-family:var(--font-mono); font-size:var(--t-mono); color:var(--ink-3); margin-bottom:.5rem; letter-spacing:.05em; }
+  .type-spec .d { font-family: var(--font-display); font-size: 2.4rem; font-weight:500; line-height:1.1; }
+  .type-spec .s { font-family: var(--font-sans); font-size: 1.3rem; }
+  .type-spec .mn { font-family: var(--font-mono); font-size: 1rem; }
+
+  /* Components */
+  .comp-grid { display:grid; grid-template-columns: repeat(auto-fit,minmax(260px,1fr)); gap:1.2rem; }
+  .comp { background:var(--surface); border:1px solid var(--line); border-radius:var(--r-lg); padding:1.3rem; }
+  .comp h3 { font-family:var(--font-sans); font-size:.95rem; font-weight:700; margin-bottom:1rem; color:var(--ink-2); }
+  .comp .demo { display:flex; flex-wrap:wrap; gap:.6rem; align-items:center; }
+
+  /* Methods */
+  .rules { display:grid; grid-template-columns:1fr 1fr; gap:1rem; }
+  .rule { display:flex; gap:.9rem; background:var(--surface); border:1px solid var(--line); border-radius:var(--r-md); padding:1.1rem 1.2rem; }
+  .rule .n { font-family:var(--font-display); font-size:1.4rem; color:var(--gold-lo); font-weight:600; line-height:1; flex:none; }
+  .rule b { display:block; margin-bottom:.2rem; }
+  .rule p { font-size:var(--t-sm); color:var(--ink-2); margin:0; }
+  @media (max-width:760px){ .rules { grid-template-columns:1fr; } }
+
+  /* Sources */
+  .src-grid { display:grid; grid-template-columns: repeat(auto-fit,minmax(250px,1fr)); gap:1rem; }
+  .src { background:var(--surface); border:1px solid var(--line); border-radius:var(--r-md); padding:1.1rem 1.2rem; border-top:3px solid var(--accent); }
+  .src h3 { font-family:var(--font-sans); font-size:1rem; font-weight:700; }
+  .src .p { font-family:var(--font-mono); font-size:var(--t-mono); color:var(--ink-3); margin:.2rem 0 .6rem; }
+  .src p { font-size:var(--t-sm); color:var(--ink-2); margin:0 0 .6rem; }
+</style>
+</head>
+<body>
+
+<header class="nav">
+  <div class="wrap nav__in">
+    <a class="brand" href="index.html" aria-label="Accueil">
+      <svg width="30" height="30" viewBox="0 0 32 32" aria-hidden="true"><path d="M16 2C10.5 2 6 6.4 6 11.9c0 7.2 8.4 16.5 9.2 17.4a1.1 1.1 0 0 0 1.6 0c.8-.9 9.2-10.2 9.2-17.4C26 6.4 21.5 2 16 2Z" fill="var(--accent)"/><circle cx="16" cy="12" r="4.4" fill="var(--paper)"/></svg>
+      <span class="brand__name">Observatoire <span class="amp">&</span> Quartiers</span>
+    </a>
+    <button class="icon-btn nav__burger" aria-label="Menu" aria-expanded="false" aria-controls="nav-links">☰</button>
+    <nav class="nav__links" id="nav-links" aria-label="Navigation principale">
+      <a class="nav__link" href="mon-quartier.html" data-fr="Mon quartier" data-en="My neighborhood">Mon quartier</a>
+      <a class="nav__link" href="affaire-saint-ouen.html" data-fr="L'affaire Saint-Ouen" data-en="The Saint-Ouen affair">L'affaire Saint-Ouen</a>
+      <a class="nav__link" href="explorer.html" data-fr="Explorer la carte" data-en="Explore the map">Explorer la carte</a>
+      <a class="nav__link" href="explorer.html#comparer" data-fr="Comparer" data-en="Compare">Comparer</a>
+      <a class="nav__link" href="systeme.html" aria-current="page" data-fr="Méthodes" data-en="Methods">Méthodes</a>
+      <a class="nav__link" href="systeme.html" data-fr="Sources" data-en="Sources">Sources</a>
+    </nav>
+    <div class="nav__tools">
+      <div class="lang" role="group" aria-label="Langue"><button data-lang="fr" aria-pressed="true">FR</button><button data-lang="en" aria-pressed="false">EN</button></div>
+      <button class="icon-btn" data-theme-toggle aria-label="Thème">☾</button>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+  <section class="shero reveal">
+    <span class="eyebrow" data-fr="Système · méthode · sources" data-en="System · method · sources">Système · méthode · sources</span>
+    <h1 style="margin-top:1rem" data-fr="La donnée comme patrimoine commun." data-en="Data as common heritage.">La donnée comme patrimoine commun.</h1>
+    <p data-fr="L'identité visuelle, les règles de preuve et les sources qui rendent cet observatoire citable. Tout est ouvert, daté et reproductible." data-en="The visual identity, the evidence rules and the sources that make this observatory citable. Everything is open, dated and reproducible.">L'identité visuelle, les règles de preuve et les sources qui rendent cet observatoire citable. Tout est ouvert, daté et reproductible.</p>
+  </section>
+
+  <!-- IDENTITY -->
+  <section class="block">
+    <div class="block__head reveal"><span class="block__n">01</span><h2 data-fr="Identité & direction artistique" data-en="Identity & art direction">Identité & direction artistique</h2></div>
+    <div class="identity">
+      <div class="idcard reveal">
+        <div class="logo-xl">
+          <svg width="44" height="44" viewBox="0 0 32 32" aria-hidden="true"><path d="M16 2C10.5 2 6 6.4 6 11.9c0 7.2 8.4 16.5 9.2 17.4a1.1 1.1 0 0 0 1.6 0c.8-.9 9.2-10.2 9.2-17.4C26 6.4 21.5 2 16 2Z" fill="var(--accent)"/><circle cx="16" cy="12" r="4.4" fill="var(--paper)"/></svg>
+          <span class="nm">Observatoire <span class="amp">&</span> Quartiers</span>
+        </div>
+        <div class="tagline" data-fr="« Les données ouvertes, l'avis libre. »" data-en="“Open data, your own opinion.”">« Les données ouvertes, l'avis libre. »<span class="en">Open data, your own opinion.</span></div>
+        <hr class="gilt" style="margin:1.2rem 0">
+        <p class="lead" data-fr="Une épingle cartographique : l'observatoire pointe un lieu, jamais une personne." data-en="A map pin: the observatory points at a place, never a person.">Une épingle cartographique : l'observatoire pointe un lieu, jamais une personne.</p>
+      </div>
+      <div class="idcard reveal reveal-d1" style="display:flex;flex-direction:column;justify-content:center">
+        <span class="eyebrow" data-fr="Note de direction artistique" data-en="Art-direction note">Note de direction artistique</span>
+        <p class="lead" style="margin-top:.8rem" data-fr="Marbre & or antique. On traite un sujet populaire et viral avec la gravité d'une institution — sans condescendance pour les quartiers ni la cuisine. La donnée mérite la monumentalité : colonnes, lumière chaude, filets dorés, typographie de gravure. Le sérieux comme respect, l'esprit comme élégance." data-en="Marble & antique gold. We treat a popular, viral subject with the gravity of an institution — never condescending to the neighborhoods or the cuisine. Data deserves monumentality: columns, warm light, gilt rules, engraved type. Seriousness as respect, wit as elegance.">Marbre & or antique. On traite un sujet populaire et viral avec la <b>gravité d'une institution</b> — sans condescendance pour les quartiers ni la cuisine. La donnée mérite la monumentalité : colonnes, lumière chaude, filets dorés, typographie de gravure. Le sérieux comme respect, l'esprit comme élégance.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- COLOR -->
+  <section class="block">
+    <div class="block__head reveal"><span class="block__n">02</span><h2 data-fr="Couleur" data-en="Color">Couleur</h2></div>
+    <p class="lead reveal" style="margin-bottom:1.2rem" data-fr="Neutres marbre chauds, accent or antique, et trois hues classiques pour la preuve — toujours doublées d'un symbole (colorblind-safe)." data-en="Warm marble neutrals, antique-gold accent, and three classical hues for evidence — always paired with a symbol (colorblind-safe).">Neutres marbre chauds, accent or antique, et trois hues classiques pour la preuve — toujours doublées d'un symbole (colorblind-safe).</p>
+    <div class="swatches reveal" style="margin-bottom:1.6rem">
+      <div class="sw"><div class="c" style="background:var(--paper)"></div><div class="m"><b>Marbre</b><span>--paper</span></div></div>
+      <div class="sw"><div class="c" style="background:var(--surface-2)"></div><div class="m"><b>Marbre 2</b><span>--surface-2</span></div></div>
+      <div class="sw"><div class="c" style="background:var(--ink)"></div><div class="m"><b>Encre</b><span>--ink</span></div></div>
+      <div class="sw"><div class="c" style="background:var(--accent)"></div><div class="m"><b>Or antique</b><span>--accent</span></div></div>
+      <div class="sw"><div class="c" style="background:var(--gold)"></div><div class="m"><b>Gilt</b><span>--gold</span></div></div>
+      <div class="sw"><div class="c" style="background:var(--doc)"></div><div class="m"><b>Documenté</b><span>--doc</span></div></div>
+      <div class="sw"><div class="c" style="background:var(--eme)"></div><div class="m"><b>Émergent</b><span>--eme</span></div></div>
+      <div class="sw"><div class="c" style="background:var(--con)"></div><div class="m"><b>Contesté</b><span>--con</span></div></div>
+    </div>
+    <div class="reveal">
+      <div class="ramprow"><span class="t" data-fr="Prix au m² — séquentiel or/terracotta" data-en="Price/m² — gold/terracotta sequential">Prix au m² — séquentiel or/terracotta</span><div class="ramp"><i style="background:var(--prix-0)"></i><i style="background:var(--prix-1)"></i><i style="background:var(--prix-2)"></i><i style="background:var(--prix-3)"></i><i style="background:var(--prix-4)"></i></div></div>
+      <div class="ramprow"><span class="t" data-fr="Densité fast-food — vert-de-gris" data-en="Fast-food density — verdigris">Densité fast-food — vert-de-gris</span><div class="ramp"><i style="background:var(--dens-0)"></i><i style="background:var(--dens-1)"></i><i style="background:var(--dens-2)"></i><i style="background:var(--dens-3)"></i><i style="background:var(--dens-4)"></i></div></div>
+      <div class="ramprow"><span class="t" data-fr="Délinquance — ardoise (jamais rouge, anti-stigmate)" data-en="Crime — slate (never red, anti-stigma)">Délinquance — ardoise (jamais rouge, anti-stigmate)</span><div class="ramp"><i style="background:var(--crim-0)"></i><i style="background:var(--crim-1)"></i><i style="background:var(--crim-2)"></i><i style="background:var(--crim-3)"></i><i style="background:var(--crim-4)"></i></div></div>
+    </div>
+  </section>
+
+  <!-- TYPE -->
+  <section class="block">
+    <div class="block__head reveal"><span class="block__n">03</span><h2 data-fr="Typographie" data-en="Typography">Typographie</h2></div>
+    <div class="type-spec reveal"><div class="meta">Newsreader · display éditorial · 500/600</div><div class="d">Le débat, à l'échelle d'un monument</div></div>
+    <div class="type-spec reveal reveal-d1"><div class="meta">Public Sans · interface & données · 400–700 · pensé pour le civic</div><div class="s">Activez une couche, cliquez une commune. Une superposition n'est pas une preuve.</div></div>
+    <div class="type-spec reveal reveal-d2"><div class="meta">IBM Plex Mono · étiquettes, sources, chiffres</div><div class="mn">6 399 €/m² · documenté · DVF — Etalab / DGFiP · Licence Ouverte 2.0</div></div>
+  </section>
+
+  <!-- COMPONENTS -->
+  <section class="block">
+    <div class="block__head reveal"><span class="block__n">04</span><h2 data-fr="Composants" data-en="Components">Composants</h2></div>
+    <div class="comp-grid">
+      <div class="comp reveal">
+        <h3 data-fr="Étiquettes de preuve" data-en="Evidence badges">Étiquettes de preuve</h3>
+        <div class="demo">
+          <span class="badge badge--doc"><span class="g">✓</span>documenté</span>
+          <span class="badge badge--eme"><span class="g">~</span>émergent</span>
+          <span class="badge badge--con"><span class="g">!</span>contesté</span>
+        </div>
+      </div>
+      <div class="comp reveal reveal-d1">
+        <h3 data-fr="Boutons" data-en="Buttons">Boutons</h3>
+        <div class="demo">
+          <button class="btn btn--primary">Explorer</button>
+          <button class="btn btn--ghost">En savoir plus</button>
+        </div>
+      </div>
+      <div class="comp reveal reveal-d2">
+        <h3 data-fr="Carte KPI" data-en="KPI card">Carte KPI</h3>
+        <div class="card kpi" style="box-shadow:none">
+          <div class="kpi__v">6 399<span class="u">€/m²</span></div>
+          <div class="kpi__l">Prix médian à Saint-Ouen (2024)</div>
+          <div class="kpi__foot"><span class="badge badge--doc"><span class="g">✓</span>documenté</span><span class="source" style="margin:0">DVF</span></div>
+        </div>
+      </div>
+      <div class="comp reveal">
+        <h3 data-fr="Ligne de source" data-en="Source line">Ligne de source</h3>
+        <div class="source">Source : <a href="#">DVF — Etalab / DGFiP</a> · Licence Ouverte 2.0</div>
+      </div>
+      <div class="comp reveal reveal-d1">
+        <h3 data-fr="Filet doré" data-en="Gilt rule">Filet doré</h3>
+        <div class="rule-gold" style="margin:1.2rem 0"><span class="dot"></span></div>
+        <hr class="gilt">
+      </div>
+      <div class="comp reveal reveal-d2">
+        <h3 data-fr="Mouvement" data-en="Motion">Mouvement</h3>
+        <p style="font-size:var(--t-sm);color:var(--ink-2);margin:0" data-fr="Révélation au défilement, parallaxe douce, balayage de lumière sur les images, et chatoiement doré — tous désactivés sous prefers-reduced-motion." data-en="Scroll reveal, gentle parallax, light sweep over images, and gilt shimmer — all disabled under prefers-reduced-motion.">Révélation au défilement, parallaxe douce, balayage de lumière sur les images, et chatoiement doré — tous désactivés sous <span class="mono">prefers-reduced-motion</span>.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- METHODS -->
+  <section class="block">
+    <div class="block__head reveal"><span class="block__n">05</span><h2 data-fr="Méthode & limites" data-en="Method & limits">Méthode & limites</h2></div>
+    <p class="lead reveal" style="margin-bottom:1.4rem" data-fr="La règle de la maison : jamais une corrélation pour une cause, ni une rumeur pour un fait." data-en="The house rule: never a correlation for a cause, nor a rumor for a fact.">La règle de la maison : jamais une corrélation pour une cause, ni une rumeur pour un fait.</p>
+    <div class="rules">
+      <div class="rule reveal"><span class="n">1</span><div><b data-fr="Une étiquette sur chaque chiffre" data-en="A label on every number">Une étiquette sur chaque chiffre</b><p data-fr="documenté / émergent / contesté, avec une source liée. Couleur + symbole." data-en="documented / emerging / contested, with a linked source. Color + symbol.">documenté / émergent / contesté, avec une source liée. Couleur + symbole.</p></div></div>
+      <div class="rule reveal reveal-d1"><span class="n">2</span><div><b data-fr="Le portail de la délinquance" data-en="The crime gate">Le portail de la délinquance</b><p data-fr="Donnée communale uniquement, derrière un avertissement de sophisme écologique. Jamais un quartier." data-en="Commune-level only, behind an ecological-fallacy warning. Never a neighborhood.">Donnée communale uniquement, derrière un avertissement de sophisme écologique. Jamais un quartier.</p></div></div>
+      <div class="rule reveal"><span class="n">3</span><div><b data-fr="null, jamais 0" data-en="null, never 0">null, jamais 0</b><p data-fr="Une valeur sous secret statistique reste « non diffusé » — jamais comptée comme zéro." data-en="A statistically-suppressed value stays “not disclosed” — never counted as zero.">Une valeur sous secret statistique reste « non diffusé » — jamais comptée comme zéro.</p></div></div>
+      <div class="rule reveal reveal-d1"><span class="n">4</span><div><b data-fr="Pas de carte du blanchiment" data-en="No money-laundering map">Pas de carte du blanchiment</b><p data-fr="Risque général réel mais non prouvé pour ces enseignes : aucune carte, aucun cadrage identitaire." data-en="A real general risk but unproven for these brands: no map, no identity framing.">Risque général réel mais non prouvé pour ces enseignes : aucune carte, aucun cadrage identitaire.</p></div></div>
+    </div>
+  </section>
+
+  <!-- SOURCES -->
+  <section class="block">
+    <div class="block__head reveal"><span class="block__n">06</span><h2 data-fr="Sources & données" data-en="Sources & data">Sources & données</h2></div>
+    <div class="src-grid">
+      <div class="src reveal"><h3>DVF géolocalisé</h3><div class="p">Etalab / DGFiP · Licence Ouverte 2.0</div><p data-fr="Prix immobilier médian au m², 2021–2024. 337k ventes." data-en="Median property price/m², 2021–2024. 337k sales.">Prix immobilier médian au m², 2021–2024. 337k ventes.</p><span class="badge badge--doc"><span class="g">✓</span>documenté</span></div>
+      <div class="src reveal reveal-d1"><h3>OpenStreetMap</h3><div class="p">Contributeurs OSM · ODbL 1.0</div><p data-fr="Restauration rapide (amenity=fast_food) et enseignes-cibles. Non exhaustif." data-en="Fast food (amenity=fast_food) and target outlets. Non-exhaustive.">Restauration rapide (amenity=fast_food) et enseignes-cibles. Non exhaustif.</p><span class="badge badge--eme"><span class="g">~</span>émergent</span></div>
+      <div class="src reveal reveal-d2"><h3>SSMSI</h3><div class="p">Ministère de l'Intérieur</div><p data-fr="Délinquance enregistrée, base communale, 2016–2025. Affichée derrière le portail." data-en="Recorded crime, commune base, 2016–2025. Shown behind the gate.">Délinquance enregistrée, base communale, 2016–2025. Affichée derrière le portail.</p><span class="badge badge--doc"><span class="g">✓</span>documenté</span></div>
+      <div class="src reveal"><h3>IGN Géoplateforme</h3><div class="p">IGN · Licence Ouverte</div><p data-fr="Limites communales et fond cartographique." data-en="Commune boundaries and basemap.">Limites communales et fond cartographique.</p><span class="badge badge--doc"><span class="g">✓</span>documenté</span></div>
+      <div class="src reveal reveal-d1"><h3>INSEE</h3><div class="p">INSEE · Licence Ouverte</div><p data-fr="Population communale (dénominateurs), Filosofi (version nationale à venir)." data-en="Commune population (denominators), Filosofi (national version coming).">Population communale (dénominateurs), Filosofi (version nationale à venir).</p><span class="badge badge--doc"><span class="g">✓</span>documenté</span></div>
+      <div class="src reveal reveal-d2"><h3>Ifop</h3><div class="p" data-fr="Sondage · mai 2026" data-en="Poll · May 2026">Sondage · mai 2026</div><p data-fr="55 % des Français approuvent l'action du maire. Cité comme fait de sondage." data-en="55% of French approve the mayor's action. Cited as a poll fact.">55 % des Français approuvent l'action du maire. Cité comme fait de sondage.</p><span class="badge badge--doc"><span class="g">✓</span>documenté</span></div>
+    </div>
+  </section>
+</main>
+
+<footer class="footer">
+  <div class="wrap" style="padding-block:1.6rem"><p class="source">Réutilisation sous Licence Ouverte / Etalab 2.0 (OSM : ODbL). Observatoire indépendant — non affilié à une enseigne ni à un élu. <a href="index.html" data-fr="Accueil" data-en="Home">Accueil</a> · <a href="affaire-saint-ouen.html" data-fr="L'affaire Saint-Ouen" data-en="The Saint-Ouen affair">L'affaire Saint-Ouen</a>.</p></div>
+</footer>
+
+<script src="assets/site.js"></script>
+</body>
+</html>
